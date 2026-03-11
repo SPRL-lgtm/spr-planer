@@ -5,21 +5,11 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 62.5%; }
-body {
-  font-family: Arial, sans-serif;
-  background: #0d0f13; color: #e0e4f0;
-  font-size: 1.6rem; line-height: 1.5; min-height: 100vh;
-}
-.topbar {
-  background: #0e1014; border-bottom: 1px solid #1e2330;
-  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-}
+body { font-family: Arial, sans-serif; background: #0d0f13; color: #e0e4f0; font-size: 1.6rem; line-height: 1.5; min-height: 100vh; }
+.topbar { background: #0e1014; border-bottom: 1px solid #1e2330; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
 .logo { font-size: 2rem; font-weight: bold; color: #f0a500; letter-spacing: 2px; }
 .logo span { color: #6b7280; font-weight: normal; }
-.btn {
-  font-size: 1.4rem; font-weight: bold; padding: 10px 20px;
-  border: none; border-radius: 6px; cursor: pointer; transition: all .15s;
-}
+.btn { font-size: 1.4rem; font-weight: bold; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; }
 .btn-primary { background: #f0a500; color: #000; }
 .btn-primary:hover { background: #ffc845; }
 .btn-secondary { background: transparent; color: #9ca3af; border: 1px solid #374151; }
@@ -27,6 +17,8 @@ body {
 .btn-danger { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
 .btn-danger:hover { background: #e74c3c; color: #fff; }
 .btn-sm { padding: 7px 14px; font-size: 1.3rem; }
+.btn-icon { background: transparent; border: none; cursor: pointer; font-size: 1.5rem; padding: 4px 6px; border-radius: 4px; transition: background .12s; color: #6b7280; }
+.btn-icon:hover { background: #1e2330; color: #e0e4f0; }
 .layout { display: flex; min-height: calc(100vh - 54px); }
 .sidebar { width: 220px; background: #0e1014; border-right: 1px solid #1e2330; flex-shrink: 0; display: flex; flex-direction: column; }
 .sidebar-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; padding: 16px 16px 8px; }
@@ -43,7 +35,7 @@ body {
 .btn-new-sb:hover { border-color: #f0a500; color: #f0a500; }
 .main { flex: 1; padding: 24px; overflow-y: auto; }
 .card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; }
+.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; display: flex; align-items: center; justify-content: space-between; }
 .serie-card { background: #1a1e27; border: 1px solid #1e2330; border-left: 4px solid; border-radius: 6px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: background .12s; }
 .serie-card:hover { background: #1e2330; }
 .sc-name { font-size: 1.8rem; font-weight: bold; margin-bottom: 4px; }
@@ -53,6 +45,35 @@ body {
 .empty { text-align: center; padding: 50px 20px; color: #5a6070; }
 .empty .icon { font-size: 4rem; margin-bottom: 12px; }
 .empty .txt { font-size: 1.6rem; margin-bottom: 16px; }
+/* SERIE DETAIL */
+.serie-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1e2330; }
+.serie-header-bar { width: 5px; height: 40px; border-radius: 3px; flex-shrink: 0; }
+.serie-header-name { font-size: 2.2rem; font-weight: bold; }
+.serie-header-sub { font-size: 1.3rem; color: #6b7280; margin-top: 2px; }
+.serie-header-actions { margin-left: auto; display: flex; gap: 8px; }
+/* TASKS */
+.task-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; margin-bottom: 8px; transition: background .12s; }
+.task-row:hover { background: #1e2330; }
+.task-check { width: 18px; height: 18px; border: 2px solid #2a3040; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .15s; background: transparent; }
+.task-check.done { background: #2ecc71; border-color: #2ecc71; color: #000; }
+.task-text { flex: 1; font-size: 1.5rem; }
+.task-text.done { text-decoration: line-through; color: #6b7280; }
+.task-date { font-size: 1.2rem; color: #6b7280; flex-shrink: 0; }
+.task-date.soon { color: #f39c12; }
+.task-date.late { color: #e74c3c; }
+.task-date.done { color: #2ecc71; }
+.task-bell { font-size: 1.3rem; cursor: pointer; flex-shrink: 0; opacity: 0.4; transition: opacity .15s; background: transparent; border: none; padding: 2px 5px; }
+.task-bell:hover, .task-bell.on { opacity: 1; }
+.task-del { font-size: 1.2rem; cursor: pointer; color: #5a6070; flex-shrink: 0; background: transparent; border: none; padding: 2px 6px; border-radius: 4px; transition: color .12s; }
+.task-del:hover { color: #e74c3c; }
+.add-task-row { display: flex; gap: 8px; margin-top: 10px; }
+.add-task-row input { flex: 1; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.4rem; outline: none; }
+.add-task-row input:focus { border-color: #f0a500; }
+/* PROGRESS */
+.progress-bar { height: 6px; background: #1e2330; border-radius: 3px; margin-bottom: 16px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+.progress-label { font-size: 1.2rem; color: #6b7280; margin-bottom: 8px; }
+/* FORMS */
 label { display: block; font-size: 1.2rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
 input, select { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; outline: none; transition: border-color .15s; }
 input:focus, select:focus { border-color: #f0a500; }
@@ -61,11 +82,14 @@ input:focus, select:focus { border-color: #f0a500; }
 .color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .col-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all .15s; }
 .col-opt.sel { border-color: #fff; transform: scale(1.2); }
+/* MODALS */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999; align-items: center; justify-content: center; }
 .modal-bg.open { display: flex; }
 .modal { background: #161920; border: 1px solid #2a3040; border-top: 3px solid #f0a500; border-radius: 8px; padding: 24px; width: 480px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
 .modal-title { font-size: 1.8rem; font-weight: bold; color: #f0a500; margin-bottom: 20px; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+.divider { height: 1px; background: #1e2330; margin: 16px 0; }
+.info-box { background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; font-size: 1.3rem; color: #6b7280; margin-bottom: 14px; }
 </style>
 </head>
 <body>
@@ -86,54 +110,34 @@ input:focus, select:focus { border-color: #f0a500; }
   <div class="main" id="main"></div>
 </div>
 
-<div class="modal-bg" id="modal">
+<!-- MODAL SERIE -->
+<div class="modal-bg" id="modal-serie">
   <div class="modal">
-    <div class="modal-title" id="modal-title">Neue Serie</div>
+    <div class="modal-title" id="modal-serie-title">Neue Serie</div>
     <input type="hidden" id="f-id">
     <div class="row2">
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" id="f-name" placeholder="z.B. iR Masters">
-      </div>
-      <div class="form-group">
-        <label>Simulator</label>
+      <div class="form-group"><label>Name</label><input type="text" id="f-name" placeholder="z.B. iR Masters"></div>
+      <div class="form-group"><label>Simulator</label>
         <select id="f-sim">
-          <option value="iRacing">iRacing</option>
-          <option value="ACC">ACC</option>
-          <option value="LMU">LMU</option>
-          <option value="rFactor2">rFactor 2</option>
+          <option value="iRacing">iRacing</option><option value="ACC">ACC</option>
+          <option value="LMU">LMU</option><option value="rFactor2">rFactor 2</option>
         </select>
       </div>
     </div>
     <div class="row2">
-      <div class="form-group">
-        <label>Saison</label>
-        <input type="text" id="f-season" placeholder="S1 2026">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
+      <div class="form-group"><label>Saison</label><input type="text" id="f-season" placeholder="S1 2026"></div>
+      <div class="form-group"><label>Status</label>
         <select id="f-status">
-          <option value="planned">Geplant</option>
-          <option value="prep">Vorbereitung</option>
-          <option value="active">Aktiv</option>
-          <option value="done">Abgeschlossen</option>
+          <option value="planned">Geplant</option><option value="prep">Vorbereitung</option>
+          <option value="active">Aktiv</option><option value="done">Abgeschlossen</option>
         </select>
       </div>
     </div>
     <div class="row2">
-      <div class="form-group">
-        <label>Start</label>
-        <input type="date" id="f-start">
-      </div>
-      <div class="form-group">
-        <label>Ende</label>
-        <input type="date" id="f-end">
-      </div>
+      <div class="form-group"><label>Start</label><input type="date" id="f-start"></div>
+      <div class="form-group"><label>Ende</label><input type="date" id="f-end"></div>
     </div>
-    <div class="form-group">
-      <label>Verantwortlich</label>
-      <input type="text" id="f-owner" placeholder="Discord-Name">
-    </div>
+    <div class="form-group"><label>Verantwortlich</label><input type="text" id="f-owner" placeholder="Discord-Name"></div>
     <div class="form-group">
       <label>Farbe</label>
       <div class="color-picker" id="color-picker">
@@ -147,21 +151,70 @@ input:focus, select:focus { border-color: #f0a500; }
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" id="btn-delete" style="display:none;margin-right:auto">Loeschen</button>
-      <button class="btn btn-secondary btn-sm" id="btn-cancel">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" id="btn-save">Speichern</button>
+      <button class="btn btn-danger btn-sm" id="btn-delete-serie" style="display:none;margin-right:auto">Loeschen</button>
+      <button class="btn btn-secondary btn-sm" id="btn-cancel-serie">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="btn-save-serie">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AUFGABE (Datum + Webhook) -->
+<div class="modal-bg" id="modal-task">
+  <div class="modal">
+    <div class="modal-title" id="modal-task-title">Aufgabe bearbeiten</div>
+    <input type="hidden" id="t-serie-id">
+    <input type="hidden" id="t-task-id">
+    <div class="form-group"><label>Aufgabe</label><input type="text" id="t-text" placeholder="Was muss erledigt werden?"></div>
+    <div class="form-group"><label>Faellig am</label><input type="date" id="t-date"></div>
+    <div class="divider"></div>
+    <div class="form-group">
+      <label>Discord Erinnerung</label>
+      <div class="info-box" id="wh-status">Kein Webhook konfiguriert - siehe Einstellungen</div>
+      <input type="text" id="t-wh-msg" placeholder="Nachricht (leer = Standard)" style="margin-top:8px">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" id="btn-cancel-task">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="btn-send-now" style="display:none">Jetzt senden</button>
+      <button class="btn btn-primary btn-sm" id="btn-save-task">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EINSTELLUNGEN -->
+<div class="modal-bg" id="modal-settings">
+  <div class="modal">
+    <div class="modal-title">Einstellungen</div>
+    <div class="form-group">
+      <label>Discord Webhook URL</label>
+      <input type="text" id="s-webhook" placeholder="https://discord.com/api/webhooks/...">
+    </div>
+    <div class="form-group">
+      <label>Webhook Name</label>
+      <input type="text" id="s-wh-name" placeholder="SPR Planer">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" id="btn-cancel-settings">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="btn-save-settings">Speichern</button>
     </div>
   </div>
 </div>
 
 <script>
 var series = [];
-var KEY = "spr_v3";
+var settings = { webhook: "", whname: "SPR Planer" };
+var KEY = "spr_v4";
+var SKEY = "spr_settings";
+var currentSerieId = null;
 
-try {
-  var stored = localStorage.getItem(KEY);
-  if (stored) { series = JSON.parse(stored); }
-} catch(err) {}
+var DEFAULT_TASKS = [
+  "Reglement aktualisieren",
+  "Kalender erstellen",
+  "Briefing vorbereiten",
+  "Discord Ankuendigung",
+  "Server / Session einrichten",
+  "Ergebnisse eintragen",
+  "Meisterschaft aktualisieren"
+];
 
 var statusLabel = {};
 statusLabel["planned"] = "Geplant";
@@ -175,13 +228,12 @@ statusColor["prep"] = "#f39c12";
 statusColor["active"] = "#2ecc71";
 statusColor["done"] = "#5a6070";
 
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-}
+try { var r = localStorage.getItem(KEY); if (r) series = JSON.parse(r); } catch(e) {}
+try { var rs = localStorage.getItem(SKEY); if (rs) settings = JSON.parse(rs); } catch(e) {}
 
-function saveData() {
-  try { localStorage.setItem(KEY, JSON.stringify(series)); } catch(err) {}
-}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+function saveData() { try { localStorage.setItem(KEY, JSON.stringify(series)); } catch(e) {} }
+function saveSettings() { try { localStorage.setItem(SKEY, JSON.stringify(settings)); } catch(e) {} }
 
 function formatDate(d) {
   if (!d) return "-";
@@ -189,32 +241,296 @@ function formatDate(d) {
   return p[2] + "." + p[1] + "." + p[0];
 }
 
-function setColor(c) {
-  var opts = document.querySelectorAll(".col-opt");
-  for (var i = 0; i < opts.length; i++) {
-    if (opts[i].getAttribute("data-color") === c) {
-      opts[i].classList.add("sel");
-    } else {
-      opts[i].classList.remove("sel");
-    }
+function dateStatus(d, done) {
+  if (done) return "done";
+  if (!d) return "";
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var dl = new Date(d);
+  var diff = Math.ceil((dl - today) / 86400000);
+  if (diff < 0) return "late";
+  if (diff <= 3) return "soon";
+  return "";
+}
+
+function getSerieById(id) {
+  for (var i = 0; i < series.length; i++) {
+    if (series[i].id === id) return series[i];
+  }
+  return null;
+}
+
+function getTaskById(serie, tid) {
+  for (var i = 0; i < serie.tasks.length; i++) {
+    if (serie.tasks[i].id === tid) return serie.tasks[i];
+  }
+  return null;
+}
+
+// ── WEBHOOK ──
+function sendWebhook(msg, serieColor) {
+  if (!settings.webhook) return;
+  var color = serieColor ? parseInt(serieColor.replace("#", ""), 16) : 15763456;
+  var body = JSON.stringify({
+    username: settings.whname || "SPR Planer",
+    embeds: [{
+      title: "SPR Planer Erinnerung",
+      description: msg,
+      color: color,
+      footer: { text: "SPR Planer" }
+    }]
+  });
+  fetch(settings.webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: body
+  }).then(function(res) {
+    if (res.ok) { alert("Discord Nachricht gesendet!"); }
+    else { alert("Fehler beim Senden!"); }
+  }).catch(function() { alert("Fehler beim Senden!"); });
+}
+
+// ── RENDER SIDEBAR ──
+function renderSidebar() {
+  var el = document.getElementById("sidebar-list");
+  if (series.length === 0) {
+    el.innerHTML = "<div style=\"padding:12px;font-size:1.3rem;color:#5a6070;text-align:center\">Noch keine Serien</div>";
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < series.length; i++) {
+    var s = series[i];
+    var sel = (s.id === currentSerieId) ? " sel" : "";
+    html += "<div class=\"serie-item" + sel + "\" data-id=\"" + s.id + "\">";
+    html += "<div class=\"serie-dot\" style=\"background:" + s.color + "\"></div>";
+    html += "<div><div class=\"si-name\">" + s.name + "</div>";
+    html += "<div class=\"si-sub\">" + s.sim + "</div></div></div>";
+  }
+  el.innerHTML = html;
+  var items = el.querySelectorAll(".serie-item");
+  for (var j = 0; j < items.length; j++) {
+    items[j].addEventListener("click", function() {
+      currentSerieId = this.getAttribute("data-id");
+      renderSidebar();
+      renderMain();
+    });
   }
 }
 
+// ── RENDER MAIN ──
+function renderMain() {
+  var el = document.getElementById("main");
+
+  if (!currentSerieId) {
+    // Uebersicht aller Serien
+    if (series.length === 0) {
+      el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien. Erstelle deine erste!</div><button class=\"btn btn-primary\" id=\"btn-empty\">+ Neue Serie erstellen</button></div>";
+      document.getElementById("btn-empty").addEventListener("click", openNewSerie);
+      return;
+    }
+    var html = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
+    for (var i = 0; i < series.length; i++) {
+      var s = series[i];
+      var c = statusColor[s.status] || "#5a6070";
+      var lbl = statusLabel[s.status] || s.status;
+      var done = 0;
+      for (var t = 0; t < s.tasks.length; t++) { if (s.tasks[t].done) done++; }
+      var pct = s.tasks.length > 0 ? Math.round(done / s.tasks.length * 100) : 0;
+      html += "<div class=\"serie-card\" style=\"border-left-color:" + s.color + "\" data-id=\"" + s.id + "\">";
+      html += "<div class=\"sc-name\">" + s.name + "</div>";
+      html += "<div class=\"sc-sub\">" + s.sim + (s.season ? " - " + s.season : "") + "</div>";
+      html += "<div style=\"margin-top:10px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:" + pct + "%;background:" + s.color + "\"></div></div></div>";
+      html += "<div class=\"sc-footer\"><span style=\"font-size:1.2rem;color:#6b7280\">" + done + "/" + s.tasks.length + " erledigt</span>";
+      html += "<span class=\"badge\" style=\"background:" + c + "22;color:" + c + ";border:1px solid " + c + "44\">" + lbl + "</span></div>";
+      html += "</div>";
+    }
+    html += "</div>";
+    el.innerHTML = html;
+    var cards = el.querySelectorAll(".serie-card");
+    for (var j = 0; j < cards.length; j++) {
+      cards[j].addEventListener("click", function() {
+        currentSerieId = this.getAttribute("data-id");
+        renderSidebar();
+        renderMain();
+      });
+    }
+    return;
+  }
+
+  // Serie Detail
+  var serie = getSerieById(currentSerieId);
+  if (!serie) { currentSerieId = null; renderMain(); return; }
+
+  var done2 = 0;
+  for (var ti = 0; ti < serie.tasks.length; ti++) { if (serie.tasks[ti].done) done2++; }
+  var pct2 = serie.tasks.length > 0 ? Math.round(done2 / serie.tasks.length * 100) : 0;
+  var c2 = statusColor[serie.status] || "#5a6070";
+  var lbl2 = statusLabel[serie.status] || serie.status;
+
+  var html2 = "<div class=\"card\">";
+  html2 += "<div class=\"serie-header\">";
+  html2 += "<div class=\"serie-header-bar\" style=\"background:" + serie.color + "\"></div>";
+  html2 += "<div><div class=\"serie-header-name\">" + serie.name + "</div>";
+  html2 += "<div class=\"serie-header-sub\">" + serie.sim + (serie.season ? " - " + serie.season : "") + (serie.owner ? " - " + serie.owner : "") + "</div></div>";
+  html2 += "<div class=\"serie-header-actions\">";
+  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-back\">&#8592; Zurueck</button>";
+  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-edit-serie\">Bearbeiten</button>";
+  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-settings\">&#9881; Webhook</button>";
+  html2 += "</div></div>";
+
+  html2 += "<div class=\"progress-label\">" + pct2 + "% erledigt (" + done2 + "/" + serie.tasks.length + ")</div>";
+  html2 += "<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:" + pct2 + "%;background:" + serie.color + "\"></div></div>";
+
+  html2 += "<div class=\"card-title\" style=\"margin-top:16px\">Aufgaben</div>";
+
+  // Tasks
+  for (var ti2 = 0; ti2 < serie.tasks.length; ti2++) {
+    var task = serie.tasks[ti2];
+    var ds = dateStatus(task.date, task.done);
+    var dclass = ds ? " " + ds : "";
+    var chkclass = task.done ? " done" : "";
+    var txtclass = task.done ? " done" : "";
+    var dateStr = task.date ? formatDate(task.date) : "";
+    var bellOn = settings.webhook ? " on" : "";
+
+    html2 += "<div class=\"task-row\" data-tid=\"" + task.id + "\">";
+    html2 += "<button class=\"task-check" + chkclass + "\" data-tid=\"" + task.id + "\">" + (task.done ? "&#10003;" : "") + "</button>";
+    html2 += "<span class=\"task-text" + txtclass + "\">" + task.text + "</span>";
+    if (dateStr) {
+      html2 += "<span class=\"task-date" + dclass + "\">";
+      if (ds === "late") html2 += "&#9888; ";
+      if (ds === "soon") html2 += "&#8987; ";
+      html2 += dateStr + "</span>";
+    }
+    html2 += "<button class=\"task-bell" + bellOn + "\" data-tid=\"" + task.id + "\" title=\"Erinnerung senden\">&#128276;</button>";
+    html2 += "<button class=\"task-del\" data-tid=\"" + task.id + "\" title=\"Loeschen\">&#10005;</button>";
+    html2 += "</div>";
+  }
+
+  // Neue Aufgabe hinzufuegen
+  html2 += "<div class=\"add-task-row\">";
+  html2 += "<input type=\"text\" id=\"new-task-input\" placeholder=\"+ Neue Aufgabe hinzufuegen...\">";
+  html2 += "<button class=\"btn btn-primary btn-sm\" id=\"btn-add-task\">Hinzufuegen</button>";
+  html2 += "</div>";
+  html2 += "</div>";
+
+  el.innerHTML = html2;
+
+  // Events zuweisen
+  document.getElementById("btn-back").addEventListener("click", function() {
+    currentSerieId = null;
+    renderSidebar();
+    renderMain();
+  });
+
+  document.getElementById("btn-edit-serie").addEventListener("click", function() {
+    openEditSerie(currentSerieId);
+  });
+
+  document.getElementById("btn-settings").addEventListener("click", openSettings);
+
+  document.getElementById("btn-add-task").addEventListener("click", function() {
+    var input = document.getElementById("new-task-input");
+    var text = input.value.trim();
+    if (!text) return;
+    serie.tasks.push({ id: uid(), text: text, done: false, date: "" });
+    saveData();
+    input.value = "";
+    renderMain();
+  });
+
+  document.getElementById("new-task-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") { document.getElementById("btn-add-task").click(); }
+  });
+
+  // Checkboxen
+  var checks = el.querySelectorAll(".task-check");
+  for (var ci = 0; ci < checks.length; ci++) {
+    checks[ci].addEventListener("click", function(e) {
+      e.stopPropagation();
+      var tid = this.getAttribute("data-tid");
+      var task = getTaskById(serie, tid);
+      if (task) { task.done = !task.done; saveData(); renderMain(); }
+    });
+  }
+
+  // Loeschen
+  var dels = el.querySelectorAll(".task-del");
+  for (var di = 0; di < dels.length; di++) {
+    dels[di].addEventListener("click", function(e) {
+      e.stopPropagation();
+      var tid = this.getAttribute("data-tid");
+      if (!confirm("Aufgabe loeschen?")) return;
+      var newTasks = [];
+      for (var i = 0; i < serie.tasks.length; i++) {
+        if (serie.tasks[i].id !== tid) newTasks.push(serie.tasks[i]);
+      }
+      serie.tasks = newTasks;
+      saveData();
+      renderMain();
+    });
+  }
+
+  // Glocke = Task Modal oeffnen
+  var bells = el.querySelectorAll(".task-bell");
+  for (var bi = 0; bi < bells.length; bi++) {
+    bells[bi].addEventListener("click", function(e) {
+      e.stopPropagation();
+      var tid = this.getAttribute("data-tid");
+      openTaskModal(currentSerieId, tid);
+    });
+  }
+
+  // Klick auf Task Row = Modal
+  var rows = el.querySelectorAll(".task-row");
+  for (var ri = 0; ri < rows.length; ri++) {
+    rows[ri].addEventListener("click", function() {
+      var tid = this.getAttribute("data-tid");
+      openTaskModal(currentSerieId, tid);
+    });
+  }
+}
+
+// ── TASK MODAL ──
+function openTaskModal(sid, tid) {
+  var serie = getSerieById(sid);
+  var task = getTaskById(serie, tid);
+  if (!task) return;
+  document.getElementById("t-serie-id").value = sid;
+  document.getElementById("t-task-id").value = tid;
+  document.getElementById("modal-task-title").textContent = task.text;
+  document.getElementById("t-text").value = task.text;
+  document.getElementById("t-date").value = task.date || "";
+  document.getElementById("t-wh-msg").value = task.whMsg || "";
+
+  var whStatus = document.getElementById("wh-status");
+  var btnSend = document.getElementById("btn-send-now");
+  if (settings.webhook) {
+    whStatus.textContent = "Webhook: " + (settings.whname || "SPR Planer");
+    whStatus.style.color = "#2ecc71";
+    btnSend.style.display = "inline-flex";
+  } else {
+    whStatus.textContent = "Kein Webhook - unter Webhook konfigurieren";
+    whStatus.style.color = "#6b7280";
+    btnSend.style.display = "none";
+  }
+  document.getElementById("modal-task").classList.add("open");
+}
+
+// ── SERIE MODALS ──
+function setColor(c) {
+  var opts = document.querySelectorAll(".col-opt");
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].classList.toggle("sel", opts[i].getAttribute("data-color") === c);
+  }
+}
 function getColor() {
   var sel = document.querySelector(".col-opt.sel");
   return sel ? sel.getAttribute("data-color") : "#f0a500";
 }
 
-function openModal() {
-  document.getElementById("modal").classList.add("open");
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("open");
-}
-
-function openNew() {
-  document.getElementById("modal-title").textContent = "Neue Serie";
+function openNewSerie() {
+  document.getElementById("modal-serie-title").textContent = "Neue Serie";
   document.getElementById("f-id").value = "";
   document.getElementById("f-name").value = "";
   document.getElementById("f-sim").value = "iRacing";
@@ -223,40 +539,40 @@ function openNew() {
   document.getElementById("f-start").value = "";
   document.getElementById("f-end").value = "";
   document.getElementById("f-owner").value = "";
-  document.getElementById("btn-delete").style.display = "none";
+  document.getElementById("btn-delete-serie").style.display = "none";
   setColor("#f0a500");
-  openModal();
+  document.getElementById("modal-serie").classList.add("open");
 }
 
-function openEdit(id) {
-  var found = null;
-  for (var i = 0; i < series.length; i++) {
-    if (series[i].id === id) { found = series[i]; break; }
-  }
-  if (!found) return;
-  document.getElementById("modal-title").textContent = "Serie bearbeiten";
-  document.getElementById("f-id").value = found.id;
-  document.getElementById("f-name").value = found.name;
-  document.getElementById("f-sim").value = found.sim;
-  document.getElementById("f-season").value = found.season || "";
-  document.getElementById("f-status").value = found.status;
-  document.getElementById("f-start").value = found.start || "";
-  document.getElementById("f-end").value = found.end || "";
-  document.getElementById("f-owner").value = found.owner || "";
-  document.getElementById("btn-delete").style.display = "inline-flex";
-  setColor(found.color);
-  openModal();
+function openEditSerie(id) {
+  var s = getSerieById(id);
+  if (!s) return;
+  document.getElementById("modal-serie-title").textContent = "Bearbeiten";
+  document.getElementById("f-id").value = s.id;
+  document.getElementById("f-name").value = s.name;
+  document.getElementById("f-sim").value = s.sim;
+  document.getElementById("f-season").value = s.season || "";
+  document.getElementById("f-status").value = s.status;
+  document.getElementById("f-start").value = s.start || "";
+  document.getElementById("f-end").value = s.end || "";
+  document.getElementById("f-owner").value = s.owner || "";
+  document.getElementById("btn-delete-serie").style.display = "inline-flex";
+  setColor(s.color);
+  document.getElementById("modal-serie").classList.add("open");
+}
+
+function openSettings() {
+  document.getElementById("s-webhook").value = settings.webhook || "";
+  document.getElementById("s-wh-name").value = settings.whname || "SPR Planer";
+  document.getElementById("modal-settings").classList.add("open");
 }
 
 function saveSerie() {
-  var name = document.getElementById("f-name").value;
-  if (!name || name.trim() === "") {
-    alert("Bitte Serienname eingeben!");
-    return;
-  }
+  var name = document.getElementById("f-name").value.trim();
+  if (!name) { alert("Bitte Serienname eingeben!"); return; }
   var id = document.getElementById("f-id").value;
   var data = {
-    name: name.trim(),
+    name: name,
     sim: document.getElementById("f-sim").value,
     season: document.getElementById("f-season").value,
     status: document.getElementById("f-status").value,
@@ -269,116 +585,117 @@ function saveSerie() {
     for (var i = 0; i < series.length; i++) {
       if (series[i].id === id) {
         data.id = id;
-        data.tasks = series[i].tasks || [];
+        data.tasks = series[i].tasks;
         series[i] = data;
         break;
       }
     }
   } else {
     data.id = uid();
+    // Fixe Standardaufgaben
     data.tasks = [];
+    for (var di = 0; di < DEFAULT_TASKS.length; di++) {
+      data.tasks.push({ id: uid(), text: DEFAULT_TASKS[di], done: false, date: "" });
+    }
+    currentSerieId = data.id;
     series.push(data);
   }
   saveData();
-  closeModal();
+  document.getElementById("modal-serie").classList.remove("open");
   renderSidebar();
   renderMain();
 }
 
 function deleteSerie() {
   var id = document.getElementById("f-id").value;
-  if (!id) return;
-  if (!confirm("Serie wirklich loeschen?")) return;
+  if (!id || !confirm("Serie wirklich loeschen?")) return;
   var newList = [];
   for (var i = 0; i < series.length; i++) {
     if (series[i].id !== id) newList.push(series[i]);
   }
   series = newList;
+  if (currentSerieId === id) currentSerieId = null;
   saveData();
-  closeModal();
+  document.getElementById("modal-serie").classList.remove("open");
   renderSidebar();
   renderMain();
 }
 
-function renderSidebar() {
-  var el = document.getElementById("sidebar-list");
-  if (series.length === 0) {
-    el.innerHTML = "<div style=\"padding:12px;font-size:1.3rem;color:#5a6070;text-align:center\">Noch keine Serien</div>";
-    return;
-  }
-  var html = "";
-  for (var i = 0; i < series.length; i++) {
-    var s = series[i];
-    html += "<div class=\"serie-item\" data-id=\"" + s.id + "\">";
-    html += "<div class=\"serie-dot\" style=\"background:" + s.color + "\"></div>";
-    html += "<div><div class=\"si-name\">" + s.name + "</div>";
-    html += "<div class=\"si-sub\">" + s.sim + "</div></div></div>";
-  }
-  el.innerHTML = html;
+// ── EVENTS ──
+document.getElementById("btn-top-new").addEventListener("click", openNewSerie);
+document.getElementById("btn-sb-new").addEventListener("click", openNewSerie);
 
-  var items = el.querySelectorAll(".serie-item");
-  for (var j = 0; j < items.length; j++) {
-    items[j].addEventListener("click", function() {
-      var allItems = document.querySelectorAll(".serie-item");
-      for (var k = 0; k < allItems.length; k++) {
-        allItems[k].classList.remove("sel");
-      }
-      this.classList.add("sel");
-    });
-  }
-}
+document.getElementById("btn-save-serie").addEventListener("click", saveSerie);
+document.getElementById("btn-cancel-serie").addEventListener("click", function() {
+  document.getElementById("modal-serie").classList.remove("open");
+});
+document.getElementById("btn-delete-serie").addEventListener("click", deleteSerie);
 
-function renderMain() {
-  var el = document.getElementById("main");
-  if (series.length === 0) {
-    el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien. Erstelle deine erste!</div><button class=\"btn btn-primary\" id=\"btn-empty\">+ Neue Serie erstellen</button></div>";
-    document.getElementById("btn-empty").addEventListener("click", openNew);
-    return;
-  }
-  var html = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
-  for (var i = 0; i < series.length; i++) {
-    var s = series[i];
-    var c = statusColor[s.status] || "#5a6070";
-    var lbl = statusLabel[s.status] || s.status;
-    html += "<div class=\"serie-card\" style=\"border-left-color:" + s.color + "\" data-id=\"" + s.id + "\">";
-    html += "<div class=\"sc-name\">" + s.name + "</div>";
-    html += "<div class=\"sc-sub\">" + s.sim;
-    if (s.season) html += " - " + s.season;
-    if (s.owner) html += " - " + s.owner;
-    html += "</div>";
-    html += "<div class=\"sc-footer\">";
-    html += "<span>" + formatDate(s.start) + " bis " + formatDate(s.end) + "</span>";
-    html += "<span class=\"badge\" style=\"background:" + c + "22;color:" + c + ";border:1px solid " + c + "44\">" + lbl + "</span>";
-    html += "</div></div>";
-  }
-  html += "</div>";
-  el.innerHTML = html;
+document.getElementById("btn-save-task").addEventListener("click", function() {
+  var sid = document.getElementById("t-serie-id").value;
+  var tid = document.getElementById("t-task-id").value;
+  var serie = getSerieById(sid);
+  var task = getTaskById(serie, tid);
+  if (!task) return;
+  task.text = document.getElementById("t-text").value.trim() || task.text;
+  task.date = document.getElementById("t-date").value;
+  task.whMsg = document.getElementById("t-wh-msg").value;
+  saveData();
+  document.getElementById("modal-task").classList.remove("open");
+  renderMain();
+});
 
-  var cards = el.querySelectorAll(".serie-card");
-  for (var j = 0; j < cards.length; j++) {
-    cards[j].addEventListener("click", function() {
-      openEdit(this.getAttribute("data-id"));
-    });
+document.getElementById("btn-send-now").addEventListener("click", function() {
+  var sid = document.getElementById("t-serie-id").value;
+  var serie = getSerieById(sid);
+  var tid = document.getElementById("t-task-id").value;
+  var task = getTaskById(serie, tid);
+  var msg = document.getElementById("t-wh-msg").value.trim();
+  if (!msg) {
+    msg = "Erinnerung: **" + task.text + "**";
+    if (task.date) msg += "\nFaellig am: " + formatDate(task.date);
+    if (serie) msg += "\nSerie: " + serie.name;
   }
-}
+  sendWebhook(msg, serie ? serie.color : null);
+});
 
-document.getElementById("btn-top-new").addEventListener("click", openNew);
-document.getElementById("btn-sb-new").addEventListener("click", openNew);
-document.getElementById("btn-save").addEventListener("click", saveSerie);
-document.getElementById("btn-cancel").addEventListener("click", closeModal);
-document.getElementById("btn-delete").addEventListener("click", deleteSerie);
+document.getElementById("btn-cancel-task").addEventListener("click", function() {
+  document.getElementById("modal-task").classList.remove("open");
+});
+
+document.getElementById("btn-save-settings").addEventListener("click", function() {
+  settings.webhook = document.getElementById("s-webhook").value.trim();
+  settings.whname = document.getElementById("s-wh-name").value.trim() || "SPR Planer";
+  saveSettings();
+  document.getElementById("modal-settings").classList.remove("open");
+  renderMain();
+});
+
+document.getElementById("btn-cancel-settings").addEventListener("click", function() {
+  document.getElementById("modal-settings").classList.remove("open");
+});
 
 document.getElementById("color-picker").addEventListener("click", function(e) {
   var opt = e.target.closest(".col-opt");
-  if (opt) { setColor(opt.getAttribute("data-color")); }
+  if (opt) setColor(opt.getAttribute("data-color"));
 });
 
-document.getElementById("modal").addEventListener("click", function(e) {
-  if (e.target === this) { closeModal(); }
+document.getElementById("modal-serie").addEventListener("click", function(e) {
+  if (e.target === this) this.classList.remove("open");
+});
+document.getElementById("modal-task").addEventListener("click", function(e) {
+  if (e.target === this) this.classList.remove("open");
+});
+document.getElementById("modal-settings").addEventListener("click", function(e) {
+  if (e.target === this) this.classList.remove("open");
 });
 
 document.addEventListener("keydown", function(e) {
-  if (e.key === "Escape") { closeModal(); }
+  if (e.key === "Escape") {
+    document.getElementById("modal-serie").classList.remove("open");
+    document.getElementById("modal-task").classList.remove("open");
+    document.getElementById("modal-settings").classList.remove("open");
+  }
 });
 
 renderSidebar();
