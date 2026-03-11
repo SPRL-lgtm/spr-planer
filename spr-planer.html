@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<title>SPR Planer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 62.5%; }
+body {
+  font-family: Arial, sans-serif;
+  background: #0d0f13; color: #e0e4f0;
+  font-size: 1.6rem; line-height: 1.5; min-height: 100vh;
+}
+.topbar {
+  background: #0e1014; border-bottom: 1px solid #1e2330;
+  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+}
+.logo { font-size: 2rem; font-weight: bold; color: #f0a500; letter-spacing: 2px; }
+.logo span { color: #6b7280; font-weight: normal; }
+.btn {
+  font-size: 1.4rem; font-weight: bold; padding: 10px 20px;
+  border: none; border-radius: 6px; cursor: pointer; transition: all .15s;
+}
+.btn-primary { background: #f0a500; color: #000; }
+.btn-primary:hover { background: #ffc845; }
+.btn-secondary { background: transparent; color: #9ca3af; border: 1px solid #374151; }
+.btn-secondary:hover { color: #e0e4f0; border-color: #6b7280; }
+.btn-danger { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
+.btn-danger:hover { background: #e74c3c; color: #fff; }
+.btn-sm { padding: 7px 14px; font-size: 1.3rem; }
+.layout { display: flex; min-height: calc(100vh - 54px); }
+.sidebar { width: 220px; background: #0e1014; border-right: 1px solid #1e2330; flex-shrink: 0; display: flex; flex-direction: column; }
+.sidebar-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; padding: 16px 16px 8px; }
+.series-list { flex: 1; overflow-y: auto; padding: 0 8px 8px; }
+.serie-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all .12s; margin-bottom: 3px; }
+.serie-item:hover { background: #161920; }
+.serie-item.sel { background: #161920; border-color: #1e2330; }
+.serie-item.sel .si-name { color: #f0a500; }
+.serie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.si-name { font-size: 1.5rem; font-weight: bold; }
+.si-sub { font-size: 1.2rem; color: #6b7280; margin-top: 1px; }
+.sidebar-footer { padding: 10px; border-top: 1px solid #1e2330; }
+.btn-new-sb { width: 100%; padding: 10px; background: transparent; border: 1px dashed #2a3040; border-radius: 6px; color: #6b7280; cursor: pointer; font-size: 1.3rem; letter-spacing: 1px; text-transform: uppercase; transition: all .15s; }
+.btn-new-sb:hover { border-color: #f0a500; color: #f0a500; }
+.main { flex: 1; padding: 24px; overflow-y: auto; }
+.card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; }
+.serie-card { background: #1a1e27; border: 1px solid #1e2330; border-left: 4px solid; border-radius: 6px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: background .12s; }
+.serie-card:hover { background: #1e2330; }
+.sc-name { font-size: 1.8rem; font-weight: bold; margin-bottom: 4px; }
+.sc-sub { font-size: 1.3rem; color: #6b7280; }
+.sc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.badge { font-size: 1.2rem; font-weight: bold; padding: 3px 10px; border-radius: 4px; }
+.empty { text-align: center; padding: 50px 20px; color: #5a6070; }
+.empty .icon { font-size: 4rem; margin-bottom: 12px; }
+.empty .txt { font-size: 1.6rem; margin-bottom: 16px; }
+label { display: block; font-size: 1.2rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+input, select { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; outline: none; transition: border-color .15s; }
+input:focus, select:focus { border-color: #f0a500; }
+.form-group { margin-bottom: 14px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.col-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all .15s; }
+.col-opt.sel { border-color: #fff; transform: scale(1.2); }
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: #161920; border: 1px solid #2a3040; border-top: 3px solid #f0a500; border-radius: 8px; padding: 24px; width: 480px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 1.8rem; font-weight: bold; color: #f0a500; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">SPR <span>PLANER</span></div>
+  <button class="btn btn-primary" id="btn-top-new">+ Neue Serie</button>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-title">Serien</div>
+    <div class="series-list" id="sidebar-list"></div>
+    <div class="sidebar-footer">
+      <button class="btn-new-sb" id="btn-sb-new">+ Neue Serie</button>
+    </div>
+  </div>
+  <div class="main" id="main"></div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Neue Serie</div>
+    <input type="hidden" id="f-id">
+    <div class="row2">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="f-name" placeholder="z.B. iR Masters">
+      </div>
+      <div class="form-group">
+        <label>Simulator</label>
+        <select id="f-sim">
+          <option value="iRacing">iRacing</option>
+          <option value="ACC">ACC</option>
+          <option value="LMU">LMU</option>
+          <option value="rFactor2">rFactor 2</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="form-group">
+        <label>Saison</label>
+        <input type="text" id="f-season" placeholder="S1 2026">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="planned">Geplant</option>
+          <option value="prep">Vorbereitung</option>
+          <option value="active">Aktiv</option>
+          <option value="done">Abgeschlossen</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="form-group">
+        <label>Start</label>
+        <input type="date" id="f-start">
+      </div>
+      <div class="form-group">
+        <label>Ende</label>
+        <input type="date" id="f-end">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Verantwortlich</label>
+      <input type="text" id="f-owner" placeholder="Discord-Name">
+    </div>
+    <div class="form-group">
+      <label>Farbe</label>
+      <div class="color-picker" id="color-picker">
+        <div class="col-opt sel" data-color="#f0a500" style="background:#f0a500"></div>
+        <div class="col-opt" data-color="#3498db" style="background:#3498db"></div>
+        <div class="col-opt" data-color="#2ecc71" style="background:#2ecc71"></div>
+        <div class="col-opt" data-color="#e74c3c" style="background:#e74c3c"></div>
+        <div class="col-opt" data-color="#9b59b6" style="background:#9b59b6"></div>
+        <div class="col-opt" data-color="#1abc9c" style="background:#1abc9c"></div>
+        <div class="col-opt" data-color="#e67e22" style="background:#e67e22"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="btn-delete" style="display:none;margin-right:auto">Loeschen</button>
+      <button class="btn btn-secondary btn-sm" id="btn-cancel">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="btn-save">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var series = [];
+var KEY = "spr_v3";
+
+try {
+  var stored = localStorage.getItem(KEY);
+  if (stored) { series = JSON.parse(stored); }
+} catch(err) {}
+
+var statusLabel = {};
+statusLabel["planned"] = "Geplant";
+statusLabel["prep"] = "Vorbereitung";
+statusLabel["active"] = "Aktiv";
+statusLabel["done"] = "Abgeschlossen";
+
+var statusColor = {};
+statusColor["planned"] = "#3498db";
+statusColor["prep"] = "#f39c12";
+statusColor["active"] = "#2ecc71";
+statusColor["done"] = "#5a6070";
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+}
+
+function saveData() {
+  try { localStorage.setItem(KEY, JSON.stringify(series)); } catch(err) {}
+}
+
+function formatDate(d) {
+  if (!d) return "-";
+  var p = d.split("-");
+  return p[2] + "." + p[1] + "." + p[0];
+}
+
+function setColor(c) {
+  var opts = document.querySelectorAll(".col-opt");
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].getAttribute("data-color") === c) {
+      opts[i].classList.add("sel");
+    } else {
+      opts[i].classList.remove("sel");
+    }
+  }
+}
+
+function getColor() {
+  var sel = document.querySelector(".col-opt.sel");
+  return sel ? sel.getAttribute("data-color") : "#f0a500";
+}
+
+function openModal() {
+  document.getElementById("modal").classList.add("open");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+}
+
+function openNew() {
+  document.getElementById("modal-title").textContent = "Neue Serie";
+  document.getElementById("f-id").value = "";
+  document.getElementById("f-name").value = "";
+  document.getElementById("f-sim").value = "iRacing";
+  document.getElementById("f-season").value = "";
+  document.getElementById("f-status").value = "planned";
+  document.getElementById("f-start").value = "";
+  document.getElementById("f-end").value = "";
+  document.getElementById("f-owner").value = "";
+  document.getElementById("btn-delete").style.display = "none";
+  setColor("#f0a500");
+  openModal();
+}
+
+function openEdit(id) {
+  var found = null;
+  for (var i = 0; i < series.length; i++) {
+    if (series[i].id === id) { found = series[i]; break; }
+  }
+  if (!found) return;
+  document.getElementById("modal-title").textContent = "Serie bearbeiten";
+  document.getElementById("f-id").value = found.id;
+  document.getElementById("f-name").value = found.name;
+  document.getElementById("f-sim").value = found.sim;
+  document.getElementById("f-season").value = found.season || "";
+  document.getElementById("f-status").value = found.status;
+  document.getElementById("f-start").value = found.start || "";
+  document.getElementById("f-end").value = found.end || "";
+  document.getElementById("f-owner").value = found.owner || "";
+  document.getElementById("btn-delete").style.display = "inline-flex";
+  setColor(found.color);
+  openModal();
+}
+
+function saveSerie() {
+  var name = document.getElementById("f-name").value;
+  if (!name || name.trim() === "") {
+    alert("Bitte Serienname eingeben!");
+    return;
+  }
+  var id = document.getElementById("f-id").value;
+  var data = {
+    name: name.trim(),
+    sim: document.getElementById("f-sim").value,
+    season: document.getElementById("f-season").value,
+    status: document.getElementById("f-status").value,
+    start: document.getElementById("f-start").value,
+    end: document.getElementById("f-end").value,
+    owner: document.getElementById("f-owner").value,
+    color: getColor()
+  };
+  if (id) {
+    for (var i = 0; i < series.length; i++) {
+      if (series[i].id === id) {
+        data.id = id;
+        data.tasks = series[i].tasks || [];
+        series[i] = data;
+        break;
+      }
+    }
+  } else {
+    data.id = uid();
+    data.tasks = [];
+    series.push(data);
+  }
+  saveData();
+  closeModal();
+  renderSidebar();
+  renderMain();
+}
+
+function deleteSerie() {
+  var id = document.getElementById("f-id").value;
+  if (!id) return;
+  if (!confirm("Serie wirklich loeschen?")) return;
+  var newList = [];
+  for (var i = 0; i < series.length; i++) {
+    if (series[i].id !== id) newList.push(series[i]);
+  }
+  series = newList;
+  saveData();
+  closeModal();
+  renderSidebar();
+  renderMain();
+}
+
+function renderSidebar() {
+  var el = document.getElementById("sidebar-list");
+  if (series.length === 0) {
+    el.innerHTML = "<div style=\"padding:12px;font-size:1.3rem;color:#5a6070;text-align:center\">Noch keine Serien</div>";
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < series.length; i++) {
+    var s = series[i];
+    html += "<div class=\"serie-item\" data-id=\"" + s.id + "\">";
+    html += "<div class=\"serie-dot\" style=\"background:" + s.color + "\"></div>";
+    html += "<div><div class=\"si-name\">" + s.name + "</div>";
+    html += "<div class=\"si-sub\">" + s.sim + "</div></div></div>";
+  }
+  el.innerHTML = html;
+
+  var items = el.querySelectorAll(".serie-item");
+  for (var j = 0; j < items.length; j++) {
+    items[j].addEventListener("click", function() {
+      var allItems = document.querySelectorAll(".serie-item");
+      for (var k = 0; k < allItems.length; k++) {
+        allItems[k].classList.remove("sel");
+      }
+      this.classList.add("sel");
+    });
+  }
+}
+
+function renderMain() {
+  var el = document.getElementById("main");
+  if (series.length === 0) {
+    el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien. Erstelle deine erste!</div><button class=\"btn btn-primary\" id=\"btn-empty\">+ Neue Serie erstellen</button></div>";
+    document.getElementById("btn-empty").addEventListener("click", openNew);
+    return;
+  }
+  var html = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
+  for (var i = 0; i < series.length; i++) {
+    var s = series[i];
+    var c = statusColor[s.status] || "#5a6070";
+    var lbl = statusLabel[s.status] || s.status;
+    html += "<div class=\"serie-card\" style=\"border-left-color:" + s.color + "\" data-id=\"" + s.id + "\">";
+    html += "<div class=\"sc-name\">" + s.name + "</div>";
+    html += "<div class=\"sc-sub\">" + s.sim;
+    if (s.season) html += " - " + s.season;
+    if (s.owner) html += " - " + s.owner;
+    html += "</div>";
+    html += "<div class=\"sc-footer\">";
+    html += "<span>" + formatDate(s.start) + " bis " + formatDate(s.end) + "</span>";
+    html += "<span class=\"badge\" style=\"background:" + c + "22;color:" + c + ";border:1px solid " + c + "44\">" + lbl + "</span>";
+    html += "</div></div>";
+  }
+  html += "</div>";
+  el.innerHTML = html;
+
+  var cards = el.querySelectorAll(".serie-card");
+  for (var j = 0; j < cards.length; j++) {
+    cards[j].addEventListener("click", function() {
+      openEdit(this.getAttribute("data-id"));
+    });
+  }
+}
+
+document.getElementById("btn-top-new").addEventListener("click", openNew);
+document.getElementById("btn-sb-new").addEventListener("click", openNew);
+document.getElementById("btn-save").addEventListener("click", saveSerie);
+document.getElementById("btn-cancel").addEventListener("click", closeModal);
+document.getElementById("btn-delete").addEventListener("click", deleteSerie);
+
+document.getElementById("color-picker").addEventListener("click", function(e) {
+  var opt = e.target.closest(".col-opt");
+  if (opt) { setColor(opt.getAttribute("data-color")); }
+});
+
+document.getElementById("modal").addEventListener("click", function(e) {
+  if (e.target === this) { closeModal(); }
+});
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") { closeModal(); }
+});
+
+renderSidebar();
+renderMain();
+</script>
+</body>
+</html>
