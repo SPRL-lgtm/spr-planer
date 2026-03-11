@@ -242,12 +242,12 @@ textarea { resize: vertical; min-height: 70px; }
     <div class="modal-title">Aufgabe bearbeiten</div>
     <input type="hidden" id="t-sid">
     <input type="hidden" id="t-tid">
-    <div class="form-group"><label>Aufgabe *</label><input type="text" id="t-text" placeholder="Was muss erledigt werden?"></div>
+    <div class="form-group"><label>Aufgabe *</label><textarea id="t-text" placeholder="Was muss erledigt werden?" style="min-height:90px"></textarea></div>
     <div class="row2">
       <div class="form-group"><label>Faellig am</label><input type="date" id="t-date"></div>
       <div class="form-group"><label>Zustaendig</label><input type="text" id="t-owner" placeholder="Name"></div>
     </div>
-    <div class="form-group"><label>Notiz zur Aufgabe</label><textarea id="t-note" placeholder="Details, Links..."></textarea></div>
+    <div class="form-group"><label>Notiz zur Aufgabe</label><textarea id="t-note" placeholder="Details, Links..." style="min-height:100px"></textarea></div>
     <div class="divider"></div>
     <div class="form-group">
       <label>Discord Erinnerung</label>
