@@ -90,12 +90,26 @@ input:focus, select:focus { border-color: #f0a500; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
 .divider { height: 1px; background: #1e2330; margin: 16px 0; }
 .info-box { background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; font-size: 1.3rem; color: #6b7280; margin-bottom: 14px; }
+/* TABS */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #1e2330; padding-bottom: 0; }
+.tab-btn { font-size: 1.4rem; font-weight: bold; padding: 10px 18px; background: transparent; border: none; border-bottom: 2px solid transparent; color: #6b7280; cursor: pointer; transition: all .15s; margin-bottom: -1px; }
+.tab-btn:hover { color: #e0e4f0; }
+.tab-btn.active { color: #f0a500; border-bottom-color: #f0a500; }
+/* NOTIZ */
+.note-area { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 6px; padding: 14px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; line-height: 1.7; outline: none; resize: vertical; min-height: 200px; transition: border-color .15s; }
+.note-area:focus { border-color: #f0a500; }
+.note-saved { font-size: 1.2rem; color: #2ecc71; margin-left: 10px; opacity: 0; transition: opacity .3s; }
+.note-saved.show { opacity: 1; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="logo">SPR <span>PLANER</span></div>
+  <div style="display:flex;gap:4px;margin-left:24px;flex:1">
+    <button class="tab-btn active" id="tab-serien">Serien</button>
+    <button class="tab-btn" id="tab-notizen">&#128221; Notizen</button>
+  </div>
   <button class="btn btn-primary" id="btn-top-new">+ Neue Serie</button>
 </div>
 
@@ -110,7 +124,24 @@ input:focus, select:focus { border-color: #f0a500; }
   <div class="main" id="main"></div>
 </div>
 
-<!-- MODAL SERIE -->
+<!-- NOTIZEN VIEW -->
+<div id="view-notizen" style="display:none;padding:24px;max-width:900px;margin:0 auto">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">
+      <span>&#128221; Allgemeiner Notizblock</span>
+      <span class="note-saved" id="note-global-saved">Gespeichert</span>
+    </div>
+    <textarea class="note-area" id="note-global" placeholder="Notizen, Ideen, ToDos..."></textarea>
+  </div>
+  <div class="card" id="note-serie-card" style="display:none">
+    <div class="card-title">
+      <span id="note-serie-title">&#128221; Notizen zur Serie</span>
+      <span class="note-saved" id="note-serie-saved">Gespeichert</span>
+    </div>
+    <textarea class="note-area" id="note-serie" placeholder="Notizen zu dieser Serie..."></textarea>
+  </div>
+  <p style="font-size:1.3rem;color:#5a6070;text-align:center">Notizen werden automatisch gespeichert</p>
+</div>
 <div class="modal-bg" id="modal-serie">
   <div class="modal">
     <div class="modal-title" id="modal-serie-title">Neue Serie</div>
@@ -120,7 +151,7 @@ input:focus, select:focus { border-color: #f0a500; }
       <div class="form-group"><label>Simulator</label>
         <select id="f-sim">
           <option value="iRacing">iRacing</option><option value="ACC">ACC</option>
-          <option value="LMU">LMU</option><option value="rFactor2">rFactor 2</option>
+          <option value="LMU">LMU</option>
         </select>
       </div>
     </div>
@@ -698,8 +729,72 @@ document.addEventListener("keydown", function(e) {
   }
 });
 
+// ── NOTIZEN ──
+var NKEY = "spr_notes";
+var notes = {};
+try { var rn = localStorage.getItem(NKEY); if (rn) notes = JSON.parse(rn); } catch(e) {}
+function saveNotes() { try { localStorage.setItem(NKEY, JSON.stringify(notes)); } catch(e) {} }
+
+function showSaved(id) {
+  var el = document.getElementById(id);
+  el.classList.add("show");
+  setTimeout(function() { el.classList.remove("show"); }, 1500);
+}
+
+var noteGlobalTimer = null;
+var noteSerieTimer = null;
+
+function initNoteListeners() {
+  var globalArea = document.getElementById("note-global");
+  globalArea.value = notes["global"] || "";
+  globalArea.addEventListener("input", function() {
+    notes["global"] = this.value;
+    clearTimeout(noteGlobalTimer);
+    noteGlobalTimer = setTimeout(function() { saveNotes(); showSaved("note-global-saved"); }, 800);
+  });
+  var serieArea = document.getElementById("note-serie");
+  serieArea.addEventListener("input", function() {
+    if (!currentSerieId) return;
+    notes["serie_" + currentSerieId] = this.value;
+    clearTimeout(noteSerieTimer);
+    noteSerieTimer = setTimeout(function() { saveNotes(); showSaved("note-serie-saved"); }, 800);
+  });
+}
+
+function showNotizen() {
+  document.getElementById("view-notizen").style.display = "block";
+  document.getElementById("note-global").value = notes["global"] || "";
+  var serieCard = document.getElementById("note-serie-card");
+  if (currentSerieId) {
+    var s = getSerieById(currentSerieId);
+    if (s) {
+      document.getElementById("note-serie-title").textContent = "Notizen: " + s.name;
+      document.getElementById("note-serie").value = notes["serie_" + currentSerieId] || "";
+      serieCard.style.display = "block";
+    }
+  } else {
+    serieCard.style.display = "none";
+  }
+}
+
+document.getElementById("tab-serien").addEventListener("click", function() {
+  this.classList.add("active");
+  document.getElementById("tab-notizen").classList.remove("active");
+  document.getElementById("view-notizen").style.display = "none";
+  document.querySelector(".layout").style.display = "flex";
+  document.getElementById("btn-top-new").style.display = "inline-flex";
+});
+
+document.getElementById("tab-notizen").addEventListener("click", function() {
+  this.classList.add("active");
+  document.getElementById("tab-serien").classList.remove("active");
+  document.querySelector(".layout").style.display = "none";
+  document.getElementById("btn-top-new").style.display = "none";
+  showNotizen();
+});
+
 renderSidebar();
 renderMain();
-</script>
+initNoteListeners();</script>
 </body>
 </html>
