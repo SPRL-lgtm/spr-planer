@@ -6,116 +6,153 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 62.5%; }
 body { font-family: Arial, sans-serif; background: #0d0f13; color: #e0e4f0; font-size: 1.6rem; line-height: 1.5; min-height: 100vh; }
-.topbar { background: #0e1014; border-bottom: 1px solid #1e2330; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
-.logo { font-size: 2rem; font-weight: bold; color: #f0a500; letter-spacing: 2px; }
+.topbar { background: #0e1014; border-bottom: 1px solid #1e2330; padding: 0 24px; display: flex; align-items: center; gap: 0; height: 54px; }
+.logo { font-size: 1.9rem; font-weight: bold; color: #f0a500; letter-spacing: 2px; margin-right: 24px; white-space: nowrap; }
 .logo span { color: #6b7280; font-weight: normal; }
-.btn { font-size: 1.4rem; font-weight: bold; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; }
+.tab-bar { display: flex; flex: 1; height: 100%; }
+.tab-btn { font-size: 1.4rem; font-weight: bold; padding: 0 18px; background: transparent; border: none; border-bottom: 3px solid transparent; color: #6b7280; cursor: pointer; transition: all .15s; height: 100%; }
+.tab-btn:hover { color: #e0e4f0; }
+.tab-btn.active { color: #f0a500; border-bottom-color: #f0a500; }
+.topbar-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.btn { font-size: 1.4rem; font-weight: bold; padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; }
 .btn-primary { background: #f0a500; color: #000; }
 .btn-primary:hover { background: #ffc845; }
 .btn-secondary { background: transparent; color: #9ca3af; border: 1px solid #374151; }
 .btn-secondary:hover { color: #e0e4f0; border-color: #6b7280; }
 .btn-danger { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
 .btn-danger:hover { background: #e74c3c; color: #fff; }
-.btn-sm { padding: 7px 14px; font-size: 1.3rem; }
-.btn-icon { background: transparent; border: none; cursor: pointer; font-size: 1.5rem; padding: 4px 6px; border-radius: 4px; transition: background .12s; color: #6b7280; }
-.btn-icon:hover { background: #1e2330; color: #e0e4f0; }
-.layout { display: flex; min-height: calc(100vh - 54px); }
-.sidebar { width: 220px; background: #0e1014; border-right: 1px solid #1e2330; flex-shrink: 0; display: flex; flex-direction: column; }
-.sidebar-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; padding: 16px 16px 8px; }
-.series-list { flex: 1; overflow-y: auto; padding: 0 8px 8px; }
-.serie-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all .12s; margin-bottom: 3px; }
+.btn-sm { padding: 6px 12px; font-size: 1.3rem; }
+/* VIEWS */
+.view { display: none; }
+.view.active { display: flex; min-height: calc(100vh - 54px); }
+#view-dashboard { display: none; padding: 24px; flex-direction: column; }
+#view-dashboard.active { display: block; }
+#view-notizen { display: none; padding: 24px; max-width: 860px; margin: 0 auto; width: 100%; }
+#view-notizen.active { display: block; }
+#view-strecken { display: none; padding: 24px; flex-direction: column; }
+#view-strecken.active { display: block; }
+/* SIDEBAR */
+.sidebar { width: 210px; background: #0e1014; border-right: 1px solid #1e2330; flex-shrink: 0; display: flex; flex-direction: column; }
+.sidebar-label { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; padding: 14px 14px 8px; }
+.series-list { flex: 1; overflow-y: auto; padding: 0 6px 6px; }
+.serie-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all .12s; margin-bottom: 2px; }
 .serie-item:hover { background: #161920; }
-.serie-item.sel { background: #161920; border-color: #1e2330; }
+.serie-item.sel { background: #161920; border-color: #252b38; }
 .serie-item.sel .si-name { color: #f0a500; }
-.serie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.si-name { font-size: 1.5rem; font-weight: bold; }
-.si-sub { font-size: 1.2rem; color: #6b7280; margin-top: 1px; }
-.sidebar-footer { padding: 10px; border-top: 1px solid #1e2330; }
-.btn-new-sb { width: 100%; padding: 10px; background: transparent; border: 1px dashed #2a3040; border-radius: 6px; color: #6b7280; cursor: pointer; font-size: 1.3rem; letter-spacing: 1px; text-transform: uppercase; transition: all .15s; }
+.serie-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.si-name { font-size: 1.45rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.si-sub { font-size: 1.15rem; color: #6b7280; }
+.sidebar-footer { padding: 8px; border-top: 1px solid #1e2330; }
+.btn-new-sb { width: 100%; padding: 9px; background: transparent; border: 1px dashed #2a3040; border-radius: 5px; color: #6b7280; cursor: pointer; font-size: 1.25rem; letter-spacing: 1px; text-transform: uppercase; transition: all .15s; }
 .btn-new-sb:hover { border-color: #f0a500; color: #f0a500; }
-.main { flex: 1; padding: 24px; overflow-y: auto; }
-.card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; display: flex; align-items: center; justify-content: space-between; }
-.serie-card { background: #1a1e27; border: 1px solid #1e2330; border-left: 4px solid; border-radius: 6px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: background .12s; }
+/* MAIN */
+.main { flex: 1; padding: 22px; overflow-y: auto; }
+.card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 18px; margin-bottom: 14px; }
+.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; display: flex; align-items: center; justify-content: space-between; }
+/* DASHBOARD */
+.dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+.dash-card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 16px 18px; }
+.dash-val { font-size: 3rem; font-weight: bold; color: #f0a500; line-height: 1; }
+.dash-lbl { font-size: 1.2rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.dash-val.red { color: #e74c3c; }
+.dash-val.yellow { color: #f39c12; }
+.dash-val.green { color: #2ecc71; }
+/* SERIE OVERVIEW CARD */
+.serie-card { background: #1a1e27; border: 1px solid #1e2330; border-left: 4px solid; border-radius: 6px; padding: 14px; margin-bottom: 8px; cursor: pointer; transition: background .12s; }
 .serie-card:hover { background: #1e2330; }
-.sc-name { font-size: 1.8rem; font-weight: bold; margin-bottom: 4px; }
+.sc-name { font-size: 1.7rem; font-weight: bold; margin-bottom: 3px; }
 .sc-sub { font-size: 1.3rem; color: #6b7280; }
 .sc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-.badge { font-size: 1.2rem; font-weight: bold; padding: 3px 10px; border-radius: 4px; }
-.empty { text-align: center; padding: 50px 20px; color: #5a6070; }
-.empty .icon { font-size: 4rem; margin-bottom: 12px; }
-.empty .txt { font-size: 1.6rem; margin-bottom: 16px; }
+.badge { font-size: 1.15rem; font-weight: bold; padding: 2px 9px; border-radius: 4px; }
 /* SERIE DETAIL */
-.serie-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1e2330; }
-.serie-header-bar { width: 5px; height: 40px; border-radius: 3px; flex-shrink: 0; }
-.serie-header-name { font-size: 2.2rem; font-weight: bold; }
+.serie-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1e2330; }
+.serie-header-bar { width: 5px; height: 38px; border-radius: 3px; flex-shrink: 0; }
+.serie-header-name { font-size: 2rem; font-weight: bold; }
 .serie-header-sub { font-size: 1.3rem; color: #6b7280; margin-top: 2px; }
-.serie-header-actions { margin-left: auto; display: flex; gap: 8px; }
+.serie-header-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 /* TASKS */
-.task-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; margin-bottom: 8px; transition: background .12s; }
-.task-row:hover { background: #1e2330; }
-.task-check { width: 18px; height: 18px; border: 2px solid #2a3040; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .15s; background: transparent; }
+.task-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; margin-bottom: 6px; }
+.task-check { width: 18px; height: 18px; border: 2px solid #374151; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .15s; background: transparent; color: transparent; }
 .task-check.done { background: #2ecc71; border-color: #2ecc71; color: #000; }
 .task-text { flex: 1; font-size: 1.5rem; }
 .task-text.done { text-decoration: line-through; color: #6b7280; }
-.task-date { font-size: 1.2rem; color: #6b7280; flex-shrink: 0; }
-.task-date.soon { color: #f39c12; }
-.task-date.late { color: #e74c3c; }
-.task-date.done { color: #2ecc71; }
-.task-bell { font-size: 1.3rem; cursor: pointer; flex-shrink: 0; opacity: 0.4; transition: opacity .15s; background: transparent; border: none; padding: 2px 5px; }
-.task-bell:hover, .task-bell.on { opacity: 1; }
-.task-del { font-size: 1.2rem; cursor: pointer; color: #5a6070; flex-shrink: 0; background: transparent; border: none; padding: 2px 6px; border-radius: 4px; transition: color .12s; }
-.task-del:hover { color: #e74c3c; }
+.task-date { font-size: 1.2rem; color: #6b7280; flex-shrink: 0; padding: 2px 7px; border-radius: 4px; }
+.task-date.soon { color: #f39c12; background: rgba(243,156,18,.1); }
+.task-date.late { color: #e74c3c; background: rgba(231,76,60,.1); }
+.task-date.done-ok { color: #2ecc71; }
+.task-btn { background: transparent; border: none; cursor: pointer; font-size: 1.4rem; padding: 3px 6px; border-radius: 4px; color: #5a6070; transition: color .12s; flex-shrink: 0; }
+.task-btn:hover { color: #e0e4f0; background: #252b38; }
+.task-btn.del:hover { color: #e74c3c; }
 .add-task-row { display: flex; gap: 8px; margin-top: 10px; }
 .add-task-row input { flex: 1; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.4rem; outline: none; }
 .add-task-row input:focus { border-color: #f0a500; }
-/* PROGRESS */
-.progress-bar { height: 6px; background: #1e2330; border-radius: 3px; margin-bottom: 16px; overflow: hidden; }
+.progress-bar { height: 5px; background: #1e2330; border-radius: 3px; overflow: hidden; margin-bottom: 14px; }
 .progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
-.progress-label { font-size: 1.2rem; color: #6b7280; margin-bottom: 8px; }
+.progress-label { font-size: 1.25rem; color: #6b7280; margin-bottom: 6px; }
+/* STRECKEN */
+.track-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.track-card { background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; padding: 14px; cursor: pointer; transition: background .12s; }
+.track-card:hover { background: #1e2330; }
+.track-name { font-size: 1.6rem; font-weight: bold; margin-bottom: 6px; }
+.track-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+.tag { font-size: 1.15rem; padding: 2px 8px; border-radius: 4px; background: #252b38; color: #9ca3af; }
+.tag.endurance { background: rgba(46,204,113,.15); color: #2ecc71; }
+.tag.multiclass { background: rgba(52,152,219,.15); color: #3498db; }
+.tag.sprint { background: rgba(240,165,0,.15); color: #f0a500; }
+/* NOTIZEN */
+.note-area { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 6px; padding: 14px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; line-height: 1.7; outline: none; resize: vertical; min-height: 220px; transition: border-color .15s; }
+.note-area:focus { border-color: #f0a500; }
+.note-saved { font-size: 1.2rem; color: #2ecc71; opacity: 0; transition: opacity .3s; }
+.note-saved.show { opacity: 1; }
 /* FORMS */
 label { display: block; font-size: 1.2rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-input, select { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; outline: none; transition: border-color .15s; }
-input:focus, select:focus { border-color: #f0a500; }
-.form-group { margin-bottom: 14px; }
+input, select, textarea { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; outline: none; transition: border-color .15s; }
+input:focus, select:focus, textarea:focus { border-color: #f0a500; }
+textarea { resize: vertical; min-height: 70px; }
+.form-group { margin-bottom: 13px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.divider { height: 1px; background: #1e2330; margin: 14px 0; }
+/* CHECKBOXEN GRUPPE */
+.check-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+.check-item { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 1.4rem; }
+.check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #f0a500; cursor: pointer; flex-shrink: 0; }
+/* COLORS */
 .color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.col-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all .15s; }
+.col-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all .15s; }
 .col-opt.sel { border-color: #fff; transform: scale(1.2); }
 /* MODALS */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999; align-items: center; justify-content: center; }
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.78); z-index: 9999; align-items: center; justify-content: center; }
 .modal-bg.open { display: flex; }
-.modal { background: #161920; border: 1px solid #2a3040; border-top: 3px solid #f0a500; border-radius: 8px; padding: 24px; width: 480px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
-.modal-title { font-size: 1.8rem; font-weight: bold; color: #f0a500; margin-bottom: 20px; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-.divider { height: 1px; background: #1e2330; margin: 16px 0; }
-.info-box { background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 10px 12px; font-size: 1.3rem; color: #6b7280; margin-bottom: 14px; }
-/* TABS */
-.tab-bar { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid #1e2330; padding-bottom: 0; }
-.tab-btn { font-size: 1.4rem; font-weight: bold; padding: 10px 18px; background: transparent; border: none; border-bottom: 2px solid transparent; color: #6b7280; cursor: pointer; transition: all .15s; margin-bottom: -1px; }
-.tab-btn:hover { color: #e0e4f0; }
-.tab-btn.active { color: #f0a500; border-bottom-color: #f0a500; }
-/* NOTIZ */
-.note-area { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 6px; padding: 14px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; line-height: 1.7; outline: none; resize: vertical; min-height: 200px; transition: border-color .15s; }
-.note-area:focus { border-color: #f0a500; }
-.note-saved { font-size: 1.2rem; color: #2ecc71; margin-left: 10px; opacity: 0; transition: opacity .3s; }
-.note-saved.show { opacity: 1; }
+.modal { background: #161920; border: 1px solid #2a3040; border-top: 3px solid #f0a500; border-radius: 8px; padding: 22px; width: 500px; max-width: 96vw; max-height: 92vh; overflow-y: auto; }
+.modal-title { font-size: 1.8rem; font-weight: bold; color: #f0a500; margin-bottom: 18px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.empty { text-align: center; padding: 50px 20px; color: #5a6070; }
+.empty .icon { font-size: 3.5rem; margin-bottom: 10px; }
+.empty .txt { font-size: 1.6rem; margin-bottom: 16px; }
+.info-box { background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; font-size: 1.3rem; color: #6b7280; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="logo">SPR <span>PLANER</span></div>
-  <div style="display:flex;gap:4px;margin-left:24px;flex:1">
-    <button class="tab-btn active" id="tab-serien">Serien</button>
-    <button class="tab-btn" id="tab-notizen">&#128221; Notizen</button>
+  <div class="tab-bar">
+    <button class="tab-btn active" data-view="serien">Serien</button>
+    <button class="tab-btn" data-view="dashboard">Dashboard</button>
+    <button class="tab-btn" data-view="strecken">Strecken</button>
+    <button class="tab-btn" data-view="notizen">Notizen</button>
   </div>
-  <button class="btn btn-primary" id="btn-top-new">+ Neue Serie</button>
+  <div class="topbar-right">
+    <button class="btn btn-primary" id="btn-top-new" style="display:none">+ Neue Serie</button>
+    <button class="btn btn-primary" id="btn-top-new-track" style="display:none">+ Strecke</button>
+  </div>
 </div>
 
-<div class="layout">
+<!-- VIEW: SERIEN -->
+<div class="view active" id="view-serien">
   <div class="sidebar">
-    <div class="sidebar-title">Serien</div>
+    <div class="sidebar-label">Serien</div>
     <div class="series-list" id="sidebar-list"></div>
     <div class="sidebar-footer">
       <button class="btn-new-sb" id="btn-sb-new">+ Neue Serie</button>
@@ -124,34 +161,43 @@ input:focus, select:focus { border-color: #f0a500; }
   <div class="main" id="main"></div>
 </div>
 
-<!-- NOTIZEN VIEW -->
-<div id="view-notizen" style="display:none;padding:24px;max-width:900px;margin:0 auto">
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">
-      <span>&#128221; Allgemeiner Notizblock</span>
-      <span class="note-saved" id="note-global-saved">Gespeichert</span>
-    </div>
-    <textarea class="note-area" id="note-global" placeholder="Notizen, Ideen, ToDos..."></textarea>
+<!-- VIEW: DASHBOARD -->
+<div id="view-dashboard">
+  <div id="dashboard-content"></div>
+</div>
+
+<!-- VIEW: STRECKEN -->
+<div id="view-strecken">
+  <div id="strecken-content" style="padding:0"></div>
+</div>
+
+<!-- VIEW: NOTIZEN -->
+<div id="view-notizen">
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span>&#128221; Allgemeiner Notizblock</span><span class="note-saved" id="note-global-saved">Gespeichert &#10003;</span></div>
+    <textarea class="note-area" id="note-global" placeholder="Notizen, Ideen, allgemeine ToDos..."></textarea>
   </div>
   <div class="card" id="note-serie-card" style="display:none">
-    <div class="card-title">
-      <span id="note-serie-title">&#128221; Notizen zur Serie</span>
-      <span class="note-saved" id="note-serie-saved">Gespeichert</span>
-    </div>
-    <textarea class="note-area" id="note-serie" placeholder="Notizen zu dieser Serie..."></textarea>
+    <div class="card-title"><span id="note-serie-label">&#128221; Serien-Notizen</span><span class="note-saved" id="note-serie-saved">Gespeichert &#10003;</span></div>
+    <textarea class="note-area" id="note-serie-area" placeholder="Notizen zu dieser Serie..."></textarea>
   </div>
-  <p style="font-size:1.3rem;color:#5a6070;text-align:center">Notizen werden automatisch gespeichert</p>
+  <p style="font-size:1.25rem;color:#5a6070;text-align:center">Wird automatisch gespeichert</p>
 </div>
+
+<!-- MODAL: SERIE -->
 <div class="modal-bg" id="modal-serie">
   <div class="modal">
     <div class="modal-title" id="modal-serie-title">Neue Serie</div>
     <input type="hidden" id="f-id">
     <div class="row2">
-      <div class="form-group"><label>Name</label><input type="text" id="f-name" placeholder="z.B. iR Masters"></div>
+      <div class="form-group"><label>Name *</label><input type="text" id="f-name" placeholder="z.B. iR Masters"></div>
       <div class="form-group"><label>Simulator</label>
         <select id="f-sim">
-          <option value="iRacing">iRacing</option><option value="ACC">ACC</option>
+          <option value="iRacing">iRacing</option>
+          <option value="ACC">ACC</option>
           <option value="LMU">LMU</option>
+          <option value="AMS2">AMS2</option>
+          <option value="AC">Assetto Corsa</option>
         </select>
       </div>
     </div>
@@ -159,8 +205,10 @@ input:focus, select:focus { border-color: #f0a500; }
       <div class="form-group"><label>Saison</label><input type="text" id="f-season" placeholder="S1 2026"></div>
       <div class="form-group"><label>Status</label>
         <select id="f-status">
-          <option value="planned">Geplant</option><option value="prep">Vorbereitung</option>
-          <option value="active">Aktiv</option><option value="done">Abgeschlossen</option>
+          <option value="planned">Geplant</option>
+          <option value="prep">Vorbereitung</option>
+          <option value="active">Aktiv</option>
+          <option value="done">Abgeschlossen</option>
         </select>
       </div>
     </div>
@@ -169,8 +217,7 @@ input:focus, select:focus { border-color: #f0a500; }
       <div class="form-group"><label>Ende</label><input type="date" id="f-end"></div>
     </div>
     <div class="form-group"><label>Verantwortlich</label><input type="text" id="f-owner" placeholder="Discord-Name"></div>
-    <div class="form-group">
-      <label>Farbe</label>
+    <div class="form-group"><label>Farbe</label>
       <div class="color-picker" id="color-picker">
         <div class="col-opt sel" data-color="#f0a500" style="background:#f0a500"></div>
         <div class="col-opt" data-color="#3498db" style="background:#3498db"></div>
@@ -182,47 +229,79 @@ input:focus, select:focus { border-color: #f0a500; }
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" id="btn-delete-serie" style="display:none;margin-right:auto">Loeschen</button>
+      <button class="btn btn-danger btn-sm" id="btn-del-serie" style="display:none;margin-right:auto">Loeschen</button>
       <button class="btn btn-secondary btn-sm" id="btn-cancel-serie">Abbrechen</button>
       <button class="btn btn-primary btn-sm" id="btn-save-serie">Speichern</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL AUFGABE (Datum + Webhook) -->
+<!-- MODAL: AUFGABE -->
 <div class="modal-bg" id="modal-task">
   <div class="modal">
-    <div class="modal-title" id="modal-task-title">Aufgabe bearbeiten</div>
-    <input type="hidden" id="t-serie-id">
-    <input type="hidden" id="t-task-id">
-    <div class="form-group"><label>Aufgabe</label><input type="text" id="t-text" placeholder="Was muss erledigt werden?"></div>
-    <div class="form-group"><label>Faellig am</label><input type="date" id="t-date"></div>
+    <div class="modal-title">Aufgabe bearbeiten</div>
+    <input type="hidden" id="t-sid">
+    <input type="hidden" id="t-tid">
+    <div class="form-group"><label>Aufgabe *</label><input type="text" id="t-text" placeholder="Was muss erledigt werden?"></div>
+    <div class="row2">
+      <div class="form-group"><label>Faellig am</label><input type="date" id="t-date"></div>
+      <div class="form-group"><label>Zustaendig</label><input type="text" id="t-owner" placeholder="Name"></div>
+    </div>
+    <div class="form-group"><label>Notiz zur Aufgabe</label><textarea id="t-note" placeholder="Details, Links..."></textarea></div>
     <div class="divider"></div>
     <div class="form-group">
       <label>Discord Erinnerung</label>
-      <div class="info-box" id="wh-status">Kein Webhook konfiguriert - siehe Einstellungen</div>
-      <input type="text" id="t-wh-msg" placeholder="Nachricht (leer = Standard)" style="margin-top:8px">
+      <div class="info-box" id="wh-status">Kein Webhook - bitte in Einstellungen konfigurieren</div>
+      <input type="text" id="t-wh-msg" placeholder="Nachricht (leer = Standard)" style="margin-top:6px">
     </div>
     <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="btn-del-task" style="margin-right:auto">Loeschen</button>
       <button class="btn btn-secondary btn-sm" id="btn-cancel-task">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" id="btn-send-now" style="display:none">Jetzt senden</button>
+      <button class="btn btn-secondary btn-sm" id="btn-send-now" style="display:none">&#128276; Senden</button>
       <button class="btn btn-primary btn-sm" id="btn-save-task">Speichern</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL EINSTELLUNGEN -->
+<!-- MODAL: STRECKE -->
+<div class="modal-bg" id="modal-track">
+  <div class="modal">
+    <div class="modal-title" id="modal-track-title">Neue Strecke</div>
+    <input type="hidden" id="tr-id">
+    <div class="row2">
+      <div class="form-group"><label>Streckenname *</label><input type="text" id="tr-name" placeholder="z.B. Nurburgring GP"></div>
+      <div class="form-group"><label>Land</label><input type="text" id="tr-country" placeholder="z.B. Deutschland"></div>
+    </div>
+    <div class="row3">
+      <div class="form-group"><label>Rundenlaenge (km)</label><input type="number" id="tr-len" placeholder="5.14" step="0.01"></div>
+      <div class="form-group"><label>Richtwert Rundenzeit</label><input type="text" id="tr-laptime" placeholder="z.B. 1:58.0"></div>
+      <div class="form-group"><label>Max. Fahrzeuge</label><input type="number" id="tr-cars" placeholder="30"></div>
+    </div>
+    <div class="form-group">
+      <label>Eignung</label>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" id="tr-sprint"> Sprint</label>
+        <label class="check-item"><input type="checkbox" id="tr-endurance"> Endurance</label>
+        <label class="check-item"><input type="checkbox" id="tr-multiclass"> Multiclass</label>
+        <label class="check-item"><input type="checkbox" id="tr-night"> Nacht</label>
+        <label class="check-item"><input type="checkbox" id="tr-wet"> Regen</label>
+      </div>
+    </div>
+    <div class="form-group"><label>Notiz</label><textarea id="tr-note" placeholder="Besonderheiten, Links..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="btn-del-track" style="display:none;margin-right:auto">Loeschen</button>
+      <button class="btn btn-secondary btn-sm" id="btn-cancel-track">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" id="btn-save-track">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EINSTELLUNGEN -->
 <div class="modal-bg" id="modal-settings">
   <div class="modal">
-    <div class="modal-title">Einstellungen</div>
-    <div class="form-group">
-      <label>Discord Webhook URL</label>
-      <input type="text" id="s-webhook" placeholder="https://discord.com/api/webhooks/...">
-    </div>
-    <div class="form-group">
-      <label>Webhook Name</label>
-      <input type="text" id="s-wh-name" placeholder="SPR Planer">
-    </div>
+    <div class="modal-title">&#9881; Webhook Einstellungen</div>
+    <div class="form-group"><label>Discord Webhook URL</label><input type="text" id="s-webhook" placeholder="https://discord.com/api/webhooks/..."></div>
+    <div class="form-group"><label>Anzeigename</label><input type="text" id="s-wh-name" placeholder="SPR Planer"></div>
     <div class="modal-actions">
       <button class="btn btn-secondary btn-sm" id="btn-cancel-settings">Abbrechen</button>
       <button class="btn btn-primary btn-sm" id="btn-save-settings">Speichern</button>
@@ -231,11 +310,18 @@ input:focus, select:focus { border-color: #f0a500; }
 </div>
 
 <script>
+// ── STATE ──
 var series = [];
+var tracks = [];
 var settings = { webhook: "", whname: "SPR Planer" };
-var KEY = "spr_v4";
-var SKEY = "spr_settings";
+var notes = {};
 var currentSerieId = null;
+var currentView = "serien";
+
+try { var _s = localStorage.getItem("spr_v5"); if (_s) series = JSON.parse(_s); } catch(e) {}
+try { var _t = localStorage.getItem("spr_tracks"); if (_t) tracks = JSON.parse(_t); } catch(e) {}
+try { var _c = localStorage.getItem("spr_cfg"); if (_c) settings = JSON.parse(_c); } catch(e) {}
+try { var _n = localStorage.getItem("spr_notes"); if (_n) notes = JSON.parse(_n); } catch(e) {}
 
 var DEFAULT_TASKS = [
   "Reglement aktualisieren",
@@ -247,99 +333,60 @@ var DEFAULT_TASKS = [
   "Meisterschaft aktualisieren"
 ];
 
-var statusLabel = {};
-statusLabel["planned"] = "Geplant";
-statusLabel["prep"] = "Vorbereitung";
-statusLabel["active"] = "Aktiv";
-statusLabel["done"] = "Abgeschlossen";
+var SL = { planned:"Geplant", prep:"Vorbereitung", active:"Aktiv", done:"Abgeschlossen" };
+var SC = { planned:"#3498db", prep:"#f39c12", active:"#2ecc71", done:"#5a6070" };
 
-var statusColor = {};
-statusColor["planned"] = "#3498db";
-statusColor["prep"] = "#f39c12";
-statusColor["active"] = "#2ecc71";
-statusColor["done"] = "#5a6070";
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
+function saveSeries() { try { localStorage.setItem("spr_v5", JSON.stringify(series)); } catch(e) {} }
+function saveTracks() { try { localStorage.setItem("spr_tracks", JSON.stringify(tracks)); } catch(e) {} }
+function saveCfg() { try { localStorage.setItem("spr_cfg", JSON.stringify(settings)); } catch(e) {} }
+function saveNotes() { try { localStorage.setItem("spr_notes", JSON.stringify(notes)); } catch(e) {} }
 
-try { var r = localStorage.getItem(KEY); if (r) series = JSON.parse(r); } catch(e) {}
-try { var rs = localStorage.getItem(SKEY); if (rs) settings = JSON.parse(rs); } catch(e) {}
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
-function saveData() { try { localStorage.setItem(KEY, JSON.stringify(series)); } catch(e) {} }
-function saveSettings() { try { localStorage.setItem(SKEY, JSON.stringify(settings)); } catch(e) {} }
-
-function formatDate(d) {
-  if (!d) return "-";
-  var p = d.split("-");
-  return p[2] + "." + p[1] + "." + p[0];
-}
-
+function fmtDate(d) { if (!d) return "-"; var p = d.split("-"); return p[2]+"."+p[1]+"."+p[0]; }
 function dateStatus(d, done) {
-  if (done) return "done";
+  if (done) return "done-ok";
   if (!d) return "";
-  var today = new Date();
-  today.setHours(0,0,0,0);
-  var dl = new Date(d);
-  var diff = Math.ceil((dl - today) / 86400000);
-  if (diff < 0) return "late";
-  if (diff <= 3) return "soon";
-  return "";
+  var today = new Date(); today.setHours(0,0,0,0);
+  var diff = Math.ceil((new Date(d) - today) / 86400000);
+  return diff < 0 ? "late" : diff <= 3 ? "soon" : "";
 }
+function getSerie(id) { for (var i=0;i<series.length;i++) if (series[i].id===id) return series[i]; return null; }
+function getTask(serie, tid) { for (var i=0;i<serie.tasks.length;i++) if (serie.tasks[i].id===tid) return serie.tasks[i]; return null; }
+function getTrack(id) { for (var i=0;i<tracks.length;i++) if (tracks[i].id===id) return tracks[i]; return null; }
 
-function getSerieById(id) {
-  for (var i = 0; i < series.length; i++) {
-    if (series[i].id === id) return series[i];
+// ── VIEWS ──
+function showView(name) {
+  currentView = name;
+  var views = ["serien","dashboard","strecken","notizen"];
+  for (var i=0;i<views.length;i++) {
+    var el = document.getElementById("view-"+views[i]);
+    if (el) el.classList.toggle("active", views[i]===name);
   }
-  return null;
+  var tabs = document.querySelectorAll(".tab-btn");
+  for (var j=0;j<tabs.length;j++) tabs[j].classList.toggle("active", tabs[j].getAttribute("data-view")===name);
+
+  document.getElementById("btn-top-new").style.display = name==="serien" ? "inline-flex" : "none";
+  document.getElementById("btn-top-new-track").style.display = name==="strecken" ? "inline-flex" : "none";
+
+  if (name==="dashboard") renderDashboard();
+  if (name==="strecken") renderStrecken();
+  if (name==="notizen") renderNotizen();
 }
 
-function getTaskById(serie, tid) {
-  for (var i = 0; i < serie.tasks.length; i++) {
-    if (serie.tasks[i].id === tid) return serie.tasks[i];
-  }
-  return null;
-}
-
-// ── WEBHOOK ──
-function sendWebhook(msg, serieColor) {
-  if (!settings.webhook) return;
-  var color = serieColor ? parseInt(serieColor.replace("#", ""), 16) : 15763456;
-  var body = JSON.stringify({
-    username: settings.whname || "SPR Planer",
-    embeds: [{
-      title: "SPR Planer Erinnerung",
-      description: msg,
-      color: color,
-      footer: { text: "SPR Planer" }
-    }]
-  });
-  fetch(settings.webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: body
-  }).then(function(res) {
-    if (res.ok) { alert("Discord Nachricht gesendet!"); }
-    else { alert("Fehler beim Senden!"); }
-  }).catch(function() { alert("Fehler beim Senden!"); });
-}
-
-// ── RENDER SIDEBAR ──
+// ── SIDEBAR ──
 function renderSidebar() {
   var el = document.getElementById("sidebar-list");
-  if (series.length === 0) {
-    el.innerHTML = "<div style=\"padding:12px;font-size:1.3rem;color:#5a6070;text-align:center\">Noch keine Serien</div>";
-    return;
-  }
+  if (!series.length) { el.innerHTML = "<div style=\"padding:10px;font-size:1.3rem;color:#5a6070;text-align:center\">Keine Serien</div>"; return; }
   var html = "";
-  for (var i = 0; i < series.length; i++) {
+  for (var i=0;i<series.length;i++) {
     var s = series[i];
-    var sel = (s.id === currentSerieId) ? " sel" : "";
-    html += "<div class=\"serie-item" + sel + "\" data-id=\"" + s.id + "\">";
-    html += "<div class=\"serie-dot\" style=\"background:" + s.color + "\"></div>";
-    html += "<div><div class=\"si-name\">" + s.name + "</div>";
-    html += "<div class=\"si-sub\">" + s.sim + "</div></div></div>";
+    html += "<div class=\"serie-item"+(s.id===currentSerieId?" sel":"")+"\" data-id=\""+s.id+"\">";
+    html += "<div class=\"serie-dot\" style=\"background:"+s.color+"\"></div>";
+    html += "<div><div class=\"si-name\">"+s.name+"</div><div class=\"si-sub\">"+s.sim+"</div></div></div>";
   }
   el.innerHTML = html;
   var items = el.querySelectorAll(".serie-item");
-  for (var j = 0; j < items.length; j++) {
+  for (var j=0;j<items.length;j++) {
     items[j].addEventListener("click", function() {
       currentSerieId = this.getAttribute("data-id");
       renderSidebar();
@@ -348,453 +395,483 @@ function renderSidebar() {
   }
 }
 
-// ── RENDER MAIN ──
+// ── MAIN (Serien) ──
 function renderMain() {
   var el = document.getElementById("main");
-
   if (!currentSerieId) {
-    // Uebersicht aller Serien
-    if (series.length === 0) {
-      el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien. Erstelle deine erste!</div><button class=\"btn btn-primary\" id=\"btn-empty\">+ Neue Serie erstellen</button></div>";
-      document.getElementById("btn-empty").addEventListener("click", openNewSerie);
+    if (!series.length) {
+      el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien.</div><button class=\"btn btn-primary\" id=\"btn-empty-new\">+ Erste Serie erstellen</button></div>";
+      document.getElementById("btn-empty-new").addEventListener("click", openNewSerie);
       return;
     }
-    var html = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
-    for (var i = 0; i < series.length; i++) {
-      var s = series[i];
-      var c = statusColor[s.status] || "#5a6070";
-      var lbl = statusLabel[s.status] || s.status;
-      var done = 0;
-      for (var t = 0; t < s.tasks.length; t++) { if (s.tasks[t].done) done++; }
-      var pct = s.tasks.length > 0 ? Math.round(done / s.tasks.length * 100) : 0;
-      html += "<div class=\"serie-card\" style=\"border-left-color:" + s.color + "\" data-id=\"" + s.id + "\">";
-      html += "<div class=\"sc-name\">" + s.name + "</div>";
-      html += "<div class=\"sc-sub\">" + s.sim + (s.season ? " - " + s.season : "") + "</div>";
-      html += "<div style=\"margin-top:10px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:" + pct + "%;background:" + s.color + "\"></div></div></div>";
-      html += "<div class=\"sc-footer\"><span style=\"font-size:1.2rem;color:#6b7280\">" + done + "/" + s.tasks.length + " erledigt</span>";
-      html += "<span class=\"badge\" style=\"background:" + c + "22;color:" + c + ";border:1px solid " + c + "44\">" + lbl + "</span></div>";
-      html += "</div>";
+    var h = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
+    for (var i=0;i<series.length;i++) {
+      var s=series[i], c=SC[s.status]||"#5a6070", dn=0;
+      for (var t=0;t<s.tasks.length;t++) if(s.tasks[t].done) dn++;
+      var pct = s.tasks.length ? Math.round(dn/s.tasks.length*100) : 0;
+      h += "<div class=\"serie-card\" style=\"border-left-color:"+s.color+"\" data-id=\""+s.id+"\">";
+      h += "<div class=\"sc-name\">"+s.name+"</div>";
+      h += "<div class=\"sc-sub\">"+s.sim+(s.season?" - "+s.season:"")+(s.owner?" - "+s.owner:"")+"</div>";
+      h += "<div style=\"margin-top:10px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pct+"%;background:"+s.color+"\"></div></div></div>";
+      h += "<div class=\"sc-footer\"><span style=\"font-size:1.2rem;color:#6b7280\">"+dn+"/"+s.tasks.length+" erledigt</span>";
+      h += "<span class=\"badge\" style=\"background:"+c+"22;color:"+c+";border:1px solid "+c+"44\">"+(SL[s.status]||s.status)+"</span></div></div>";
     }
-    html += "</div>";
-    el.innerHTML = html;
+    h += "</div>";
+    el.innerHTML = h;
     var cards = el.querySelectorAll(".serie-card");
-    for (var j = 0; j < cards.length; j++) {
-      cards[j].addEventListener("click", function() {
-        currentSerieId = this.getAttribute("data-id");
-        renderSidebar();
-        renderMain();
-      });
+    for (var j=0;j<cards.length;j++) {
+      cards[j].addEventListener("click", function() { currentSerieId=this.getAttribute("data-id"); renderSidebar(); renderMain(); });
     }
     return;
   }
 
-  // Serie Detail
-  var serie = getSerieById(currentSerieId);
-  if (!serie) { currentSerieId = null; renderMain(); return; }
+  var serie = getSerie(currentSerieId);
+  if (!serie) { currentSerieId=null; renderMain(); return; }
 
-  var done2 = 0;
-  for (var ti = 0; ti < serie.tasks.length; ti++) { if (serie.tasks[ti].done) done2++; }
-  var pct2 = serie.tasks.length > 0 ? Math.round(done2 / serie.tasks.length * 100) : 0;
-  var c2 = statusColor[serie.status] || "#5a6070";
-  var lbl2 = statusLabel[serie.status] || serie.status;
+  var dn2=0;
+  for (var ti=0;ti<serie.tasks.length;ti++) if(serie.tasks[ti].done) dn2++;
+  var pct2 = serie.tasks.length ? Math.round(dn2/serie.tasks.length*100) : 0;
 
-  var html2 = "<div class=\"card\">";
-  html2 += "<div class=\"serie-header\">";
-  html2 += "<div class=\"serie-header-bar\" style=\"background:" + serie.color + "\"></div>";
-  html2 += "<div><div class=\"serie-header-name\">" + serie.name + "</div>";
-  html2 += "<div class=\"serie-header-sub\">" + serie.sim + (serie.season ? " - " + serie.season : "") + (serie.owner ? " - " + serie.owner : "") + "</div></div>";
-  html2 += "<div class=\"serie-header-actions\">";
-  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-back\">&#8592; Zurueck</button>";
-  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-edit-serie\">Bearbeiten</button>";
-  html2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-settings\">&#9881; Webhook</button>";
-  html2 += "</div></div>";
+  var h2 = "<div class=\"card\">";
+  h2 += "<div class=\"serie-header\">";
+  h2 += "<div class=\"serie-header-bar\" style=\"background:"+serie.color+"\"></div>";
+  h2 += "<div><div class=\"serie-header-name\">"+serie.name+"</div>";
+  h2 += "<div class=\"serie-header-sub\">"+serie.sim+(serie.season?" - "+serie.season:"")+(serie.owner?" - "+serie.owner:"");
+  if (serie.start) h2 += " | "+fmtDate(serie.start)+" - "+fmtDate(serie.end);
+  h2 += "</div></div>";
+  h2 += "<div class=\"serie-header-actions\">";
+  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-back\">&#8592; Zurueck</button>";
+  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-edit-serie\">&#9998; Bearbeiten</button>";
+  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-wh-settings\">&#9881; Webhook</button>";
+  h2 += "</div></div>";
 
-  html2 += "<div class=\"progress-label\">" + pct2 + "% erledigt (" + done2 + "/" + serie.tasks.length + ")</div>";
-  html2 += "<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:" + pct2 + "%;background:" + serie.color + "\"></div></div>";
+  h2 += "<div class=\"progress-label\">"+pct2+"% erledigt ("+dn2+"/"+serie.tasks.length+")</div>";
+  h2 += "<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pct2+"%;background:"+serie.color+"\"></div></div>";
+  h2 += "<div class=\"card-title\">Aufgaben</div>";
 
-  html2 += "<div class=\"card-title\" style=\"margin-top:16px\">Aufgaben</div>";
-
-  // Tasks
-  for (var ti2 = 0; ti2 < serie.tasks.length; ti2++) {
-    var task = serie.tasks[ti2];
-    var ds = dateStatus(task.date, task.done);
-    var dclass = ds ? " " + ds : "";
-    var chkclass = task.done ? " done" : "";
-    var txtclass = task.done ? " done" : "";
-    var dateStr = task.date ? formatDate(task.date) : "";
-    var bellOn = settings.webhook ? " on" : "";
-
-    html2 += "<div class=\"task-row\" data-tid=\"" + task.id + "\">";
-    html2 += "<button class=\"task-check" + chkclass + "\" data-tid=\"" + task.id + "\">" + (task.done ? "&#10003;" : "") + "</button>";
-    html2 += "<span class=\"task-text" + txtclass + "\">" + task.text + "</span>";
-    if (dateStr) {
-      html2 += "<span class=\"task-date" + dclass + "\">";
-      if (ds === "late") html2 += "&#9888; ";
-      if (ds === "soon") html2 += "&#8987; ";
-      html2 += dateStr + "</span>";
-    }
-    html2 += "<button class=\"task-bell" + bellOn + "\" data-tid=\"" + task.id + "\" title=\"Erinnerung senden\">&#128276;</button>";
-    html2 += "<button class=\"task-del\" data-tid=\"" + task.id + "\" title=\"Loeschen\">&#10005;</button>";
-    html2 += "</div>";
+  for (var ti2=0;ti2<serie.tasks.length;ti2++) {
+    var task=serie.tasks[ti2];
+    var ds=dateStatus(task.date,task.done);
+    h2 += "<div class=\"task-row\">";
+    h2 += "<button class=\"task-check"+(task.done?" done":"")+"\" data-tid=\""+task.id+"\">"+( task.done?"&#10003;":"")+"</button>";
+    h2 += "<span class=\"task-text"+(task.done?" done":"")+"\">"+task.text+(task.owner?" <span style='font-size:1.2rem;color:#6b7280'>- "+task.owner+"</span>":"")+"</span>";
+    if (task.date) h2 += "<span class=\"task-date"+(ds?" "+ds:"")+"\">"+( ds==="late"?"&#9888; ":ds==="soon"?"&#8987; ":"")+fmtDate(task.date)+"</span>";
+    if (task.note) h2 += "<span style=\"font-size:1.2rem;color:#6b7280;margin-left:4px\" title=\""+task.note+"\">&#128196;</span>";
+    h2 += "<button class=\"task-btn\" data-tid=\""+task.id+"\" title=\"Bearbeiten\">&#9998;</button>";
+    h2 += "<button class=\"task-btn del\" data-tid=\""+task.id+"\" title=\"Loeschen\">&#10005;</button>";
+    h2 += "</div>";
   }
 
-  // Neue Aufgabe hinzufuegen
-  html2 += "<div class=\"add-task-row\">";
-  html2 += "<input type=\"text\" id=\"new-task-input\" placeholder=\"+ Neue Aufgabe hinzufuegen...\">";
-  html2 += "<button class=\"btn btn-primary btn-sm\" id=\"btn-add-task\">Hinzufuegen</button>";
-  html2 += "</div>";
-  html2 += "</div>";
+  h2 += "<div class=\"add-task-row\">";
+  h2 += "<input type=\"text\" id=\"new-task-input\" placeholder=\"+ Neue Aufgabe...\">";
+  h2 += "<button class=\"btn btn-primary btn-sm\" id=\"btn-add-task\">Hinzufuegen</button>";
+  h2 += "</div></div>";
 
-  el.innerHTML = html2;
+  el.innerHTML = h2;
 
-  // Events zuweisen
-  document.getElementById("btn-back").addEventListener("click", function() {
-    currentSerieId = null;
-    renderSidebar();
-    renderMain();
-  });
-
-  document.getElementById("btn-edit-serie").addEventListener("click", function() {
-    openEditSerie(currentSerieId);
-  });
-
-  document.getElementById("btn-settings").addEventListener("click", openSettings);
-
+  document.getElementById("btn-back").addEventListener("click", function() { currentSerieId=null; renderSidebar(); renderMain(); });
+  document.getElementById("btn-edit-serie").addEventListener("click", function() { openEditSerie(currentSerieId); });
+  document.getElementById("btn-wh-settings").addEventListener("click", openSettings);
   document.getElementById("btn-add-task").addEventListener("click", function() {
-    var input = document.getElementById("new-task-input");
-    var text = input.value.trim();
-    if (!text) return;
-    serie.tasks.push({ id: uid(), text: text, done: false, date: "" });
-    saveData();
-    input.value = "";
-    renderMain();
+    var inp = document.getElementById("new-task-input");
+    var txt = inp.value.trim();
+    if (!txt) return;
+    serie.tasks.push({ id:uid(), text:txt, done:false, date:"", owner:"", note:"", whMsg:"" });
+    saveSeries(); inp.value=""; renderMain();
   });
-
   document.getElementById("new-task-input").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") { document.getElementById("btn-add-task").click(); }
+    if (e.key==="Enter") document.getElementById("btn-add-task").click();
   });
 
   // Checkboxen
   var checks = el.querySelectorAll(".task-check");
-  for (var ci = 0; ci < checks.length; ci++) {
+  for (var ci=0;ci<checks.length;ci++) {
     checks[ci].addEventListener("click", function(e) {
       e.stopPropagation();
-      var tid = this.getAttribute("data-tid");
-      var task = getTaskById(serie, tid);
-      if (task) { task.done = !task.done; saveData(); renderMain(); }
+      var task = getTask(serie, this.getAttribute("data-tid"));
+      if (task) { task.done=!task.done; saveSeries(); renderMain(); }
     });
   }
 
-  // Loeschen
-  var dels = el.querySelectorAll(".task-del");
-  for (var di = 0; di < dels.length; di++) {
-    dels[di].addEventListener("click", function(e) {
+  // Edit buttons
+  var editBtns = el.querySelectorAll(".task-btn:not(.del)");
+  for (var ei=0;ei<editBtns.length;ei++) {
+    editBtns[ei].addEventListener("click", function(e) {
+      e.stopPropagation();
+      openTaskModal(currentSerieId, this.getAttribute("data-tid"));
+    });
+  }
+
+  // Delete buttons
+  var delBtns = el.querySelectorAll(".task-btn.del");
+  for (var di=0;di<delBtns.length;di++) {
+    delBtns[di].addEventListener("click", function(e) {
       e.stopPropagation();
       var tid = this.getAttribute("data-tid");
       if (!confirm("Aufgabe loeschen?")) return;
-      var newTasks = [];
-      for (var i = 0; i < serie.tasks.length; i++) {
-        if (serie.tasks[i].id !== tid) newTasks.push(serie.tasks[i]);
+      var newT=[];
+      for (var i=0;i<serie.tasks.length;i++) if(serie.tasks[i].id!==tid) newT.push(serie.tasks[i]);
+      serie.tasks=newT; saveSeries(); renderMain();
+    });
+  }
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  var el = document.getElementById("dashboard-content");
+  var total=series.length, active=0, tasksDue=0, tasksSoon=0, tasksTotal=0, tasksDone=0;
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  var overdueList = [];
+  for (var i=0;i<series.length;i++) {
+    var s=series[i];
+    if (s.status==="active") active++;
+    for (var t=0;t<s.tasks.length;t++) {
+      var task=s.tasks[t];
+      tasksTotal++;
+      if (task.done) { tasksDone++; continue; }
+      if (task.date) {
+        var diff = Math.ceil((new Date(task.date)-today)/86400000);
+        if (diff<0) { tasksDue++; overdueList.push({serie:s.name,color:s.color,text:task.text,date:task.date,sid:s.id}); }
+        else if (diff<=3) tasksSoon++;
       }
-      serie.tasks = newTasks;
-      saveData();
-      renderMain();
-    });
+    }
   }
 
-  // Glocke = Task Modal oeffnen
-  var bells = el.querySelectorAll(".task-bell");
-  for (var bi = 0; bi < bells.length; bi++) {
-    bells[bi].addEventListener("click", function(e) {
-      e.stopPropagation();
-      var tid = this.getAttribute("data-tid");
-      openTaskModal(currentSerieId, tid);
-    });
+  var h = "<div style=\"padding:22px\">";
+  h += "<div class=\"dash-grid\">";
+  h += "<div class=\"dash-card\"><div class=\"dash-val\">"+total+"</div><div class=\"dash-lbl\">Serien gesamt</div></div>";
+  h += "<div class=\"dash-card\"><div class=\"dash-val green\">"+active+"</div><div class=\"dash-lbl\">Aktiv</div></div>";
+  h += "<div class=\"dash-card\"><div class=\"dash-val red\">"+tasksDue+"</div><div class=\"dash-lbl\">Ueberfaellig</div></div>";
+  h += "<div class=\"dash-card\"><div class=\"dash-val yellow\">"+tasksSoon+"</div><div class=\"dash-lbl\">Bald faellig</div></div>";
+  h += "</div>";
+
+  if (overdueList.length) {
+    h += "<div class=\"card\"><div class=\"card-title\">&#9888; Ueberfaellige Aufgaben</div>";
+    for (var oi=0;oi<overdueList.length;oi++) {
+      var o=overdueList[oi];
+      h += "<div class=\"task-row\" style=\"border-left:3px solid #e74c3c;cursor:pointer\" data-sid=\""+o.sid+"\">";
+      h += "<span style=\"font-size:1.2rem;font-weight:bold;color:"+o.color+";min-width:110px\">"+o.serie+"</span>";
+      h += "<span class=\"task-text\">"+o.text+"</span>";
+      h += "<span class=\"task-date late\">&#9888; "+fmtDate(o.date)+"</span>";
+      h += "</div>";
+    }
+    h += "</div>";
   }
 
-  // Klick auf Task Row = Modal
-  var rows = el.querySelectorAll(".task-row");
-  for (var ri = 0; ri < rows.length; ri++) {
+  h += "<div class=\"card\"><div class=\"card-title\">Serien Uebersicht</div>";
+  if (!series.length) { h += "<div style=\"color:#5a6070;font-size:1.4rem;padding:12px 0\">Keine Serien vorhanden.</div>"; }
+  for (var si=0;si<series.length;si++) {
+    var sv=series[si], dn=0;
+    for (var tv=0;tv<sv.tasks.length;tv++) if(sv.tasks[tv].done) dn++;
+    var pv = sv.tasks.length ? Math.round(dn/sv.tasks.length*100) : 0;
+    var cv=SC[sv.status]||"#5a6070";
+    h += "<div class=\"serie-card\" style=\"border-left-color:"+sv.color+"\" data-id=\""+sv.id+"\">";
+    h += "<div style=\"display:flex;justify-content:space-between;align-items:center\">";
+    h += "<div><div class=\"sc-name\">"+sv.name+"</div><div class=\"sc-sub\">"+sv.sim+(sv.season?" - "+sv.season:"")+"</div></div>";
+    h += "<span class=\"badge\" style=\"background:"+cv+"22;color:"+cv+";border:1px solid "+cv+"44\">"+(SL[sv.status]||sv.status)+"</span></div>";
+    h += "<div style=\"margin-top:8px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pv+"%;background:"+sv.color+"\"></div></div>";
+    h += "<div style=\"font-size:1.2rem;color:#6b7280;margin-top:4px\">"+dn+"/"+sv.tasks.length+" Aufgaben erledigt</div></div></div>";
+  }
+  h += "</div></div>";
+  el.innerHTML = h;
+
+  var rows = el.querySelectorAll(".task-row[data-sid]");
+  for (var ri=0;ri<rows.length;ri++) {
     rows[ri].addEventListener("click", function() {
-      var tid = this.getAttribute("data-tid");
-      openTaskModal(currentSerieId, tid);
+      currentSerieId=this.getAttribute("data-sid");
+      showView("serien"); renderSidebar(); renderMain();
     });
+  }
+  var dcards = el.querySelectorAll(".serie-card");
+  for (var dci=0;dci<dcards.length;dci++) {
+    dcards[dci].addEventListener("click", function() {
+      currentSerieId=this.getAttribute("data-id");
+      showView("serien"); renderSidebar(); renderMain();
+    });
+  }
+}
+
+// ── STRECKEN ──
+function renderStrecken() {
+  var el = document.getElementById("strecken-content");
+  var h = "<div style=\"padding:22px\">";
+  if (!tracks.length) {
+    h += "<div class=\"empty\"><div class=\"icon\">&#127959;</div><div class=\"txt\">Noch keine Strecken.</div><button class=\"btn btn-primary\" id=\"btn-empty-track\">+ Erste Strecke</button></div>";
+    el.innerHTML = h + "</div>";
+    document.getElementById("btn-empty-track").addEventListener("click", openNewTrack);
+    return;
+  }
+  h += "<div class=\"track-grid\">";
+  for (var i=0;i<tracks.length;i++) {
+    var tr=tracks[i];
+    h += "<div class=\"track-card\" data-id=\""+tr.id+"\">";
+    h += "<div class=\"track-name\">"+tr.name+"</div>";
+    if (tr.country) h += "<div style=\"font-size:1.3rem;color:#6b7280\">&#127988; "+tr.country+"</div>";
+    h += "<div style=\"font-size:1.3rem;color:#9ca3af;margin-top:6px\">";
+    if (tr.len) h += "&#128204; "+tr.len+" km &nbsp;";
+    if (tr.laptime) h += "&#9201; "+tr.laptime+" &nbsp;";
+    if (tr.cars) h += "&#128663; max "+tr.cars;
+    h += "</div>";
+    h += "<div class=\"track-tags\">";
+    if (tr.sprint) h += "<span class=\"tag sprint\">Sprint</span>";
+    if (tr.endurance) h += "<span class=\"tag endurance\">Endurance</span>";
+    if (tr.multiclass) h += "<span class=\"tag multiclass\">Multiclass</span>";
+    if (tr.night) h += "<span class=\"tag\">&#127762; Nacht</span>";
+    if (tr.wet) h += "<span class=\"tag\">&#127783; Regen</span>";
+    h += "</div></div>";
+  }
+  h += "</div></div>";
+  el.innerHTML = h;
+  var cards = el.querySelectorAll(".track-card");
+  for (var j=0;j<cards.length;j++) {
+    cards[j].addEventListener("click", function() { openEditTrack(this.getAttribute("data-id")); });
   }
 }
 
 // ── TASK MODAL ──
 function openTaskModal(sid, tid) {
-  var serie = getSerieById(sid);
-  var task = getTaskById(serie, tid);
+  var serie=getSerie(sid), task=getTask(serie,tid);
   if (!task) return;
-  document.getElementById("t-serie-id").value = sid;
-  document.getElementById("t-task-id").value = tid;
-  document.getElementById("modal-task-title").textContent = task.text;
-  document.getElementById("t-text").value = task.text;
-  document.getElementById("t-date").value = task.date || "";
-  document.getElementById("t-wh-msg").value = task.whMsg || "";
-
-  var whStatus = document.getElementById("wh-status");
-  var btnSend = document.getElementById("btn-send-now");
-  if (settings.webhook) {
-    whStatus.textContent = "Webhook: " + (settings.whname || "SPR Planer");
-    whStatus.style.color = "#2ecc71";
-    btnSend.style.display = "inline-flex";
-  } else {
-    whStatus.textContent = "Kein Webhook - unter Webhook konfigurieren";
-    whStatus.style.color = "#6b7280";
-    btnSend.style.display = "none";
-  }
+  document.getElementById("t-sid").value=sid;
+  document.getElementById("t-tid").value=tid;
+  document.getElementById("t-text").value=task.text;
+  document.getElementById("t-date").value=task.date||"";
+  document.getElementById("t-owner").value=task.owner||"";
+  document.getElementById("t-note").value=task.note||"";
+  document.getElementById("t-wh-msg").value=task.whMsg||"";
+  var whEl=document.getElementById("wh-status"), btn=document.getElementById("btn-send-now");
+  if (settings.webhook) { whEl.textContent="Webhook: "+(settings.whname||"SPR Planer"); whEl.style.color="#2ecc71"; btn.style.display="inline-flex"; }
+  else { whEl.textContent="Kein Webhook konfiguriert"; whEl.style.color="#6b7280"; btn.style.display="none"; }
   document.getElementById("modal-task").classList.add("open");
 }
 
 // ── SERIE MODALS ──
 function setColor(c) {
-  var opts = document.querySelectorAll(".col-opt");
-  for (var i = 0; i < opts.length; i++) {
-    opts[i].classList.toggle("sel", opts[i].getAttribute("data-color") === c);
-  }
+  var opts=document.querySelectorAll(".col-opt");
+  for (var i=0;i<opts.length;i++) opts[i].classList.toggle("sel", opts[i].getAttribute("data-color")===c);
 }
-function getColor() {
-  var sel = document.querySelector(".col-opt.sel");
-  return sel ? sel.getAttribute("data-color") : "#f0a500";
-}
+function getColor() { var el=document.querySelector(".col-opt.sel"); return el?el.getAttribute("data-color"):"#f0a500"; }
 
 function openNewSerie() {
-  document.getElementById("modal-serie-title").textContent = "Neue Serie";
-  document.getElementById("f-id").value = "";
-  document.getElementById("f-name").value = "";
-  document.getElementById("f-sim").value = "iRacing";
-  document.getElementById("f-season").value = "";
-  document.getElementById("f-status").value = "planned";
-  document.getElementById("f-start").value = "";
-  document.getElementById("f-end").value = "";
-  document.getElementById("f-owner").value = "";
-  document.getElementById("btn-delete-serie").style.display = "none";
+  document.getElementById("modal-serie-title").textContent="Neue Serie";
+  document.getElementById("f-id").value="";
+  document.getElementById("f-name").value="";
+  document.getElementById("f-sim").value="iRacing";
+  document.getElementById("f-season").value="";
+  document.getElementById("f-status").value="planned";
+  document.getElementById("f-start").value="";
+  document.getElementById("f-end").value="";
+  document.getElementById("f-owner").value="";
+  document.getElementById("btn-del-serie").style.display="none";
   setColor("#f0a500");
   document.getElementById("modal-serie").classList.add("open");
 }
-
 function openEditSerie(id) {
-  var s = getSerieById(id);
-  if (!s) return;
-  document.getElementById("modal-serie-title").textContent = "Bearbeiten";
-  document.getElementById("f-id").value = s.id;
-  document.getElementById("f-name").value = s.name;
-  document.getElementById("f-sim").value = s.sim;
-  document.getElementById("f-season").value = s.season || "";
-  document.getElementById("f-status").value = s.status;
-  document.getElementById("f-start").value = s.start || "";
-  document.getElementById("f-end").value = s.end || "";
-  document.getElementById("f-owner").value = s.owner || "";
-  document.getElementById("btn-delete-serie").style.display = "inline-flex";
+  var s=getSerie(id); if(!s) return;
+  document.getElementById("modal-serie-title").textContent="Serie bearbeiten";
+  document.getElementById("f-id").value=s.id;
+  document.getElementById("f-name").value=s.name;
+  document.getElementById("f-sim").value=s.sim;
+  document.getElementById("f-season").value=s.season||"";
+  document.getElementById("f-status").value=s.status;
+  document.getElementById("f-start").value=s.start||"";
+  document.getElementById("f-end").value=s.end||"";
+  document.getElementById("f-owner").value=s.owner||"";
+  document.getElementById("btn-del-serie").style.display="inline-flex";
   setColor(s.color);
   document.getElementById("modal-serie").classList.add("open");
 }
 
+function openNewTrack() {
+  document.getElementById("modal-track-title").textContent="Neue Strecke";
+  document.getElementById("tr-id").value="";
+  document.getElementById("tr-name").value="";
+  document.getElementById("tr-country").value="";
+  document.getElementById("tr-len").value="";
+  document.getElementById("tr-laptime").value="";
+  document.getElementById("tr-cars").value="";
+  document.getElementById("tr-sprint").checked=false;
+  document.getElementById("tr-endurance").checked=false;
+  document.getElementById("tr-multiclass").checked=false;
+  document.getElementById("tr-night").checked=false;
+  document.getElementById("tr-wet").checked=false;
+  document.getElementById("tr-note").value="";
+  document.getElementById("btn-del-track").style.display="none";
+  document.getElementById("modal-track").classList.add("open");
+}
+function openEditTrack(id) {
+  var tr=getTrack(id); if(!tr) return;
+  document.getElementById("modal-track-title").textContent="Strecke bearbeiten";
+  document.getElementById("tr-id").value=tr.id;
+  document.getElementById("tr-name").value=tr.name;
+  document.getElementById("tr-country").value=tr.country||"";
+  document.getElementById("tr-len").value=tr.len||"";
+  document.getElementById("tr-laptime").value=tr.laptime||"";
+  document.getElementById("tr-cars").value=tr.cars||"";
+  document.getElementById("tr-sprint").checked=!!tr.sprint;
+  document.getElementById("tr-endurance").checked=!!tr.endurance;
+  document.getElementById("tr-multiclass").checked=!!tr.multiclass;
+  document.getElementById("tr-night").checked=!!tr.night;
+  document.getElementById("tr-wet").checked=!!tr.wet;
+  document.getElementById("tr-note").value=tr.note||"";
+  document.getElementById("btn-del-track").style.display="inline-flex";
+  document.getElementById("modal-track").classList.add("open");
+}
+
 function openSettings() {
-  document.getElementById("s-webhook").value = settings.webhook || "";
-  document.getElementById("s-wh-name").value = settings.whname || "SPR Planer";
+  document.getElementById("s-webhook").value=settings.webhook||"";
+  document.getElementById("s-wh-name").value=settings.whname||"SPR Planer";
   document.getElementById("modal-settings").classList.add("open");
 }
 
-function saveSerie() {
-  var name = document.getElementById("f-name").value.trim();
-  if (!name) { alert("Bitte Serienname eingeben!"); return; }
-  var id = document.getElementById("f-id").value;
-  var data = {
-    name: name,
-    sim: document.getElementById("f-sim").value,
-    season: document.getElementById("f-season").value,
-    status: document.getElementById("f-status").value,
-    start: document.getElementById("f-start").value,
-    end: document.getElementById("f-end").value,
-    owner: document.getElementById("f-owner").value,
-    color: getColor()
-  };
-  if (id) {
-    for (var i = 0; i < series.length; i++) {
-      if (series[i].id === id) {
-        data.id = id;
-        data.tasks = series[i].tasks;
-        series[i] = data;
-        break;
-      }
+// ── NOTIZEN ──
+function renderNotizen() {
+  document.getElementById("note-global").value=notes["global"]||"";
+  var serieCard=document.getElementById("note-serie-card");
+  if (currentSerieId) {
+    var s=getSerie(currentSerieId);
+    if (s) {
+      document.getElementById("note-serie-label").textContent="Notizen: "+s.name;
+      document.getElementById("note-serie-area").value=notes["serie_"+currentSerieId]||"";
+      serieCard.style.display="block";
     }
-  } else {
-    data.id = uid();
-    // Fixe Standardaufgaben
-    data.tasks = [];
-    for (var di = 0; di < DEFAULT_TASKS.length; di++) {
-      data.tasks.push({ id: uid(), text: DEFAULT_TASKS[di], done: false, date: "" });
-    }
-    currentSerieId = data.id;
-    series.push(data);
-  }
-  saveData();
-  document.getElementById("modal-serie").classList.remove("open");
-  renderSidebar();
-  renderMain();
+  } else { serieCard.style.display="none"; }
 }
 
-function deleteSerie() {
-  var id = document.getElementById("f-id").value;
-  if (!id || !confirm("Serie wirklich loeschen?")) return;
-  var newList = [];
-  for (var i = 0; i < series.length; i++) {
-    if (series[i].id !== id) newList.push(series[i]);
-  }
-  series = newList;
-  if (currentSerieId === id) currentSerieId = null;
-  saveData();
-  document.getElementById("modal-serie").classList.remove("open");
-  renderSidebar();
-  renderMain();
+var _nt1=null, _nt2=null;
+document.getElementById("note-global").addEventListener("input", function() {
+  notes["global"]=this.value; clearTimeout(_nt1);
+  _nt1=setTimeout(function(){ saveNotes(); var el=document.getElementById("note-global-saved"); el.classList.add("show"); setTimeout(function(){el.classList.remove("show");},1500); },800);
+});
+document.getElementById("note-serie-area").addEventListener("input", function() {
+  if (!currentSerieId) return;
+  notes["serie_"+currentSerieId]=this.value; clearTimeout(_nt2);
+  _nt2=setTimeout(function(){ saveNotes(); var el=document.getElementById("note-serie-saved"); el.classList.add("show"); setTimeout(function(){el.classList.remove("show");},1500); },800);
+});
+
+// ── WEBHOOK ──
+function sendWebhook(msg, color) {
+  if (!settings.webhook) return;
+  var c = color ? parseInt(color.replace("#",""),16) : 15763456;
+  fetch(settings.webhook, {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ username:settings.whname||"SPR Planer", embeds:[{ title:"SPR Planer Erinnerung", description:msg, color:c, footer:{text:"SPR Planer"} }] })
+  }).then(function(r){ alert(r.ok?"Gesendet!":"Fehler beim Senden!"); }).catch(function(){ alert("Fehler!"); });
 }
 
 // ── EVENTS ──
+// Tabs
+var tabBtns = document.querySelectorAll(".tab-btn");
+for (var ti=0;ti<tabBtns.length;ti++) {
+  tabBtns[ti].addEventListener("click", function() { showView(this.getAttribute("data-view")); });
+}
+
 document.getElementById("btn-top-new").addEventListener("click", openNewSerie);
+document.getElementById("btn-top-new-track").addEventListener("click", openNewTrack);
 document.getElementById("btn-sb-new").addEventListener("click", openNewSerie);
 
-document.getElementById("btn-save-serie").addEventListener("click", saveSerie);
-document.getElementById("btn-cancel-serie").addEventListener("click", function() {
-  document.getElementById("modal-serie").classList.remove("open");
-});
-document.getElementById("btn-delete-serie").addEventListener("click", deleteSerie);
-
-document.getElementById("btn-save-task").addEventListener("click", function() {
-  var sid = document.getElementById("t-serie-id").value;
-  var tid = document.getElementById("t-task-id").value;
-  var serie = getSerieById(sid);
-  var task = getTaskById(serie, tid);
-  if (!task) return;
-  task.text = document.getElementById("t-text").value.trim() || task.text;
-  task.date = document.getElementById("t-date").value;
-  task.whMsg = document.getElementById("t-wh-msg").value;
-  saveData();
-  document.getElementById("modal-task").classList.remove("open");
-  renderMain();
-});
-
-document.getElementById("btn-send-now").addEventListener("click", function() {
-  var sid = document.getElementById("t-serie-id").value;
-  var serie = getSerieById(sid);
-  var tid = document.getElementById("t-task-id").value;
-  var task = getTaskById(serie, tid);
-  var msg = document.getElementById("t-wh-msg").value.trim();
-  if (!msg) {
-    msg = "Erinnerung: **" + task.text + "**";
-    if (task.date) msg += "\nFaellig am: " + formatDate(task.date);
-    if (serie) msg += "\nSerie: " + serie.name;
+// Serie speichern
+document.getElementById("btn-save-serie").addEventListener("click", function() {
+  var name=document.getElementById("f-name").value.trim();
+  if (!name) { alert("Name fehlt!"); return; }
+  var id=document.getElementById("f-id").value;
+  var data={ name:name, sim:document.getElementById("f-sim").value, season:document.getElementById("f-season").value,
+    status:document.getElementById("f-status").value, start:document.getElementById("f-start").value,
+    end:document.getElementById("f-end").value, owner:document.getElementById("f-owner").value, color:getColor() };
+  if (id) {
+    for (var i=0;i<series.length;i++) if(series[i].id===id){data.id=id;data.tasks=series[i].tasks;series[i]=data;break;}
+  } else {
+    data.id=uid(); data.tasks=[];
+    for (var di=0;di<DEFAULT_TASKS.length;di++) data.tasks.push({id:uid(),text:DEFAULT_TASKS[di],done:false,date:"",owner:"",note:"",whMsg:""});
+    currentSerieId=data.id; series.push(data);
   }
-  sendWebhook(msg, serie ? serie.color : null);
+  saveSeries(); document.getElementById("modal-serie").classList.remove("open"); renderSidebar(); renderMain();
+});
+document.getElementById("btn-cancel-serie").addEventListener("click", function() { document.getElementById("modal-serie").classList.remove("open"); });
+document.getElementById("btn-del-serie").addEventListener("click", function() {
+  var id=document.getElementById("f-id").value;
+  if (!id||!confirm("Serie loeschen?")) return;
+  var nl=[];for(var i=0;i<series.length;i++)if(series[i].id!==id)nl.push(series[i]);
+  series=nl; if(currentSerieId===id)currentSerieId=null;
+  saveSeries(); document.getElementById("modal-serie").classList.remove("open"); renderSidebar(); renderMain();
 });
 
-document.getElementById("btn-cancel-task").addEventListener("click", function() {
-  document.getElementById("modal-task").classList.remove("open");
+// Aufgabe speichern
+document.getElementById("btn-save-task").addEventListener("click", function() {
+  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
+  var serie=getSerie(sid), task=getTask(serie,tid); if(!task) return;
+  var txt=document.getElementById("t-text").value.trim(); if(!txt){alert("Text fehlt!");return;}
+  task.text=txt; task.date=document.getElementById("t-date").value;
+  task.owner=document.getElementById("t-owner").value;
+  task.note=document.getElementById("t-note").value;
+  task.whMsg=document.getElementById("t-wh-msg").value;
+  saveSeries(); document.getElementById("modal-task").classList.remove("open"); renderMain();
+});
+document.getElementById("btn-cancel-task").addEventListener("click", function() { document.getElementById("modal-task").classList.remove("open"); });
+document.getElementById("btn-del-task").addEventListener("click", function() {
+  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
+  if (!confirm("Aufgabe loeschen?")) return;
+  var serie=getSerie(sid), nl=[];
+  for(var i=0;i<serie.tasks.length;i++)if(serie.tasks[i].id!==tid)nl.push(serie.tasks[i]);
+  serie.tasks=nl; saveSeries(); document.getElementById("modal-task").classList.remove("open"); renderMain();
+});
+document.getElementById("btn-send-now").addEventListener("click", function() {
+  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
+  var serie=getSerie(sid), task=getTask(serie,tid);
+  var msg=document.getElementById("t-wh-msg").value.trim();
+  if (!msg) { msg="Erinnerung: **"+task.text+"**"; if(task.date)msg+="\nFaellig: "+fmtDate(task.date); if(serie)msg+="\nSerie: "+serie.name; }
+  sendWebhook(msg, serie?serie.color:null);
 });
 
+// Strecke speichern
+document.getElementById("btn-save-track").addEventListener("click", function() {
+  var name=document.getElementById("tr-name").value.trim(); if(!name){alert("Name fehlt!");return;}
+  var id=document.getElementById("tr-id").value;
+  var data={ name:name, country:document.getElementById("tr-country").value,
+    len:document.getElementById("tr-len").value, laptime:document.getElementById("tr-laptime").value,
+    cars:document.getElementById("tr-cars").value, sprint:document.getElementById("tr-sprint").checked,
+    endurance:document.getElementById("tr-endurance").checked, multiclass:document.getElementById("tr-multiclass").checked,
+    night:document.getElementById("tr-night").checked, wet:document.getElementById("tr-wet").checked,
+    note:document.getElementById("tr-note").value };
+  if (id) { for(var i=0;i<tracks.length;i++)if(tracks[i].id===id){data.id=id;tracks[i]=data;break;} }
+  else { data.id=uid(); tracks.push(data); }
+  saveTracks(); document.getElementById("modal-track").classList.remove("open"); renderStrecken();
+});
+document.getElementById("btn-cancel-track").addEventListener("click", function() { document.getElementById("modal-track").classList.remove("open"); });
+document.getElementById("btn-del-track").addEventListener("click", function() {
+  var id=document.getElementById("tr-id").value; if(!id||!confirm("Strecke loeschen?")) return;
+  var nl=[];for(var i=0;i<tracks.length;i++)if(tracks[i].id!==id)nl.push(tracks[i]);
+  tracks=nl; saveTracks(); document.getElementById("modal-track").classList.remove("open"); renderStrecken();
+});
+
+// Settings
 document.getElementById("btn-save-settings").addEventListener("click", function() {
-  settings.webhook = document.getElementById("s-webhook").value.trim();
-  settings.whname = document.getElementById("s-wh-name").value.trim() || "SPR Planer";
-  saveSettings();
-  document.getElementById("modal-settings").classList.remove("open");
-  renderMain();
+  settings.webhook=document.getElementById("s-webhook").value.trim();
+  settings.whname=document.getElementById("s-wh-name").value.trim()||"SPR Planer";
+  saveCfg(); document.getElementById("modal-settings").classList.remove("open"); renderMain();
 });
+document.getElementById("btn-cancel-settings").addEventListener("click", function() { document.getElementById("modal-settings").classList.remove("open"); });
 
-document.getElementById("btn-cancel-settings").addEventListener("click", function() {
-  document.getElementById("modal-settings").classList.remove("open");
-});
-
+// Color picker
 document.getElementById("color-picker").addEventListener("click", function(e) {
-  var opt = e.target.closest(".col-opt");
-  if (opt) setColor(opt.getAttribute("data-color"));
+  var opt=e.target.closest(".col-opt"); if(opt) setColor(opt.getAttribute("data-color"));
 });
 
-document.getElementById("modal-serie").addEventListener("click", function(e) {
-  if (e.target === this) this.classList.remove("open");
-});
-document.getElementById("modal-task").addEventListener("click", function(e) {
-  if (e.target === this) this.classList.remove("open");
-});
-document.getElementById("modal-settings").addEventListener("click", function(e) {
-  if (e.target === this) this.classList.remove("open");
-});
+// Modal hintergrund schliessen
+var modals=["modal-serie","modal-task","modal-track","modal-settings"];
+for (var mi=0;mi<modals.length;mi++) {
+  (function(id){ document.getElementById(id).addEventListener("click", function(e){ if(e.target===this) this.classList.remove("open"); }); })(modals[mi]);
+}
 
 document.addEventListener("keydown", function(e) {
-  if (e.key === "Escape") {
-    document.getElementById("modal-serie").classList.remove("open");
-    document.getElementById("modal-task").classList.remove("open");
-    document.getElementById("modal-settings").classList.remove("open");
-  }
+  if (e.key==="Escape") { for(var i=0;i<modals.length;i++) document.getElementById(modals[i]).classList.remove("open"); }
 });
 
-// ── NOTIZEN ──
-var NKEY = "spr_notes";
-var notes = {};
-try { var rn = localStorage.getItem(NKEY); if (rn) notes = JSON.parse(rn); } catch(e) {}
-function saveNotes() { try { localStorage.setItem(NKEY, JSON.stringify(notes)); } catch(e) {} }
-
-function showSaved(id) {
-  var el = document.getElementById(id);
-  el.classList.add("show");
-  setTimeout(function() { el.classList.remove("show"); }, 1500);
-}
-
-var noteGlobalTimer = null;
-var noteSerieTimer = null;
-
-function initNoteListeners() {
-  var globalArea = document.getElementById("note-global");
-  globalArea.value = notes["global"] || "";
-  globalArea.addEventListener("input", function() {
-    notes["global"] = this.value;
-    clearTimeout(noteGlobalTimer);
-    noteGlobalTimer = setTimeout(function() { saveNotes(); showSaved("note-global-saved"); }, 800);
-  });
-  var serieArea = document.getElementById("note-serie");
-  serieArea.addEventListener("input", function() {
-    if (!currentSerieId) return;
-    notes["serie_" + currentSerieId] = this.value;
-    clearTimeout(noteSerieTimer);
-    noteSerieTimer = setTimeout(function() { saveNotes(); showSaved("note-serie-saved"); }, 800);
-  });
-}
-
-function showNotizen() {
-  document.getElementById("view-notizen").style.display = "block";
-  document.getElementById("note-global").value = notes["global"] || "";
-  var serieCard = document.getElementById("note-serie-card");
-  if (currentSerieId) {
-    var s = getSerieById(currentSerieId);
-    if (s) {
-      document.getElementById("note-serie-title").textContent = "Notizen: " + s.name;
-      document.getElementById("note-serie").value = notes["serie_" + currentSerieId] || "";
-      serieCard.style.display = "block";
-    }
-  } else {
-    serieCard.style.display = "none";
-  }
-}
-
-document.getElementById("tab-serien").addEventListener("click", function() {
-  this.classList.add("active");
-  document.getElementById("tab-notizen").classList.remove("active");
-  document.getElementById("view-notizen").style.display = "none";
-  document.querySelector(".layout").style.display = "flex";
-  document.getElementById("btn-top-new").style.display = "inline-flex";
-});
-
-document.getElementById("tab-notizen").addEventListener("click", function() {
-  this.classList.add("active");
-  document.getElementById("tab-serien").classList.remove("active");
-  document.querySelector(".layout").style.display = "none";
-  document.getElementById("btn-top-new").style.display = "none";
-  showNotizen();
-});
-
+// ── INIT ──
+showView("serien");
 renderSidebar();
 renderMain();
-initNoteListeners();</script>
+</script>
 </body>
 </html>
