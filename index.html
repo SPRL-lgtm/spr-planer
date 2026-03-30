@@ -1,877 +1,671 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<title>SPR Planer</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { font-size: 62.5%; }
-body { font-family: Arial, sans-serif; background: #0d0f13; color: #e0e4f0; font-size: 1.6rem; line-height: 1.5; min-height: 100vh; }
-.topbar { background: #0e1014; border-bottom: 1px solid #1e2330; padding: 0 24px; display: flex; align-items: center; gap: 0; height: 54px; }
-.logo { font-size: 1.9rem; font-weight: bold; color: #f0a500; letter-spacing: 2px; margin-right: 24px; white-space: nowrap; }
-.logo span { color: #6b7280; font-weight: normal; }
-.tab-bar { display: flex; flex: 1; height: 100%; }
-.tab-btn { font-size: 1.4rem; font-weight: bold; padding: 0 18px; background: transparent; border: none; border-bottom: 3px solid transparent; color: #6b7280; cursor: pointer; transition: all .15s; height: 100%; }
-.tab-btn:hover { color: #e0e4f0; }
-.tab-btn.active { color: #f0a500; border-bottom-color: #f0a500; }
-.topbar-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-.btn { font-size: 1.4rem; font-weight: bold; padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; }
-.btn-primary { background: #f0a500; color: #000; }
-.btn-primary:hover { background: #ffc845; }
-.btn-secondary { background: transparent; color: #9ca3af; border: 1px solid #374151; }
-.btn-secondary:hover { color: #e0e4f0; border-color: #6b7280; }
-.btn-danger { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
-.btn-danger:hover { background: #e74c3c; color: #fff; }
-.btn-sm { padding: 6px 12px; font-size: 1.3rem; }
-/* VIEWS */
-.view { display: none; }
-.view.active { display: flex; min-height: calc(100vh - 54px); }
-#view-dashboard { display: none; padding: 24px; flex-direction: column; }
-#view-dashboard.active { display: block; }
-#view-notizen { display: none; padding: 24px; max-width: 860px; margin: 0 auto; width: 100%; }
-#view-notizen.active { display: block; }
-#view-strecken { display: none; padding: 24px; flex-direction: column; }
-#view-strecken.active { display: block; }
-/* SIDEBAR */
-.sidebar { width: 210px; background: #0e1014; border-right: 1px solid #1e2330; flex-shrink: 0; display: flex; flex-direction: column; }
-.sidebar-label { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; padding: 14px 14px 8px; }
-.series-list { flex: 1; overflow-y: auto; padding: 0 6px 6px; }
-.serie-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all .12s; margin-bottom: 2px; }
-.serie-item:hover { background: #161920; }
-.serie-item.sel { background: #161920; border-color: #252b38; }
-.serie-item.sel .si-name { color: #f0a500; }
-.serie-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.si-name { font-size: 1.45rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.si-sub { font-size: 1.15rem; color: #6b7280; }
-.sidebar-footer { padding: 8px; border-top: 1px solid #1e2330; }
-.btn-new-sb { width: 100%; padding: 9px; background: transparent; border: 1px dashed #2a3040; border-radius: 5px; color: #6b7280; cursor: pointer; font-size: 1.25rem; letter-spacing: 1px; text-transform: uppercase; transition: all .15s; }
-.btn-new-sb:hover { border-color: #f0a500; color: #f0a500; }
-/* MAIN */
-.main { flex: 1; padding: 22px; overflow-y: auto; }
-.card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 18px; margin-bottom: 14px; }
-.card-title { font-size: 1.1rem; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #1e2330; display: flex; align-items: center; justify-content: space-between; }
-/* DASHBOARD */
-.dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
-.dash-card { background: #161920; border: 1px solid #1e2330; border-radius: 8px; padding: 16px 18px; }
-.dash-val { font-size: 3rem; font-weight: bold; color: #f0a500; line-height: 1; }
-.dash-lbl { font-size: 1.2rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
-.dash-val.red { color: #e74c3c; }
-.dash-val.yellow { color: #f39c12; }
-.dash-val.green { color: #2ecc71; }
-/* SERIE OVERVIEW CARD */
-.serie-card { background: #1a1e27; border: 1px solid #1e2330; border-left: 4px solid; border-radius: 6px; padding: 14px; margin-bottom: 8px; cursor: pointer; transition: background .12s; }
-.serie-card:hover { background: #1e2330; }
-.sc-name { font-size: 1.7rem; font-weight: bold; margin-bottom: 3px; }
-.sc-sub { font-size: 1.3rem; color: #6b7280; }
-.sc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-.badge { font-size: 1.15rem; font-weight: bold; padding: 2px 9px; border-radius: 4px; }
-/* SERIE DETAIL */
-.serie-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1e2330; }
-.serie-header-bar { width: 5px; height: 38px; border-radius: 3px; flex-shrink: 0; }
-.serie-header-name { font-size: 2rem; font-weight: bold; }
-.serie-header-sub { font-size: 1.3rem; color: #6b7280; margin-top: 2px; }
-.serie-header-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-/* TASKS */
-.task-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; margin-bottom: 6px; }
-.task-check { width: 18px; height: 18px; border: 2px solid #374151; border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .15s; background: transparent; color: transparent; }
-.task-check.done { background: #2ecc71; border-color: #2ecc71; color: #000; }
-.task-text { flex: 1; font-size: 1.5rem; }
-.task-text.done { text-decoration: line-through; color: #6b7280; }
-.task-date { font-size: 1.2rem; color: #6b7280; flex-shrink: 0; padding: 2px 7px; border-radius: 4px; }
-.task-date.soon { color: #f39c12; background: rgba(243,156,18,.1); }
-.task-date.late { color: #e74c3c; background: rgba(231,76,60,.1); }
-.task-date.done-ok { color: #2ecc71; }
-.task-btn { background: transparent; border: none; cursor: pointer; font-size: 1.4rem; padding: 3px 6px; border-radius: 4px; color: #5a6070; transition: color .12s; flex-shrink: 0; }
-.task-btn:hover { color: #e0e4f0; background: #252b38; }
-.task-btn.del:hover { color: #e74c3c; }
-.add-task-row { display: flex; gap: 8px; margin-top: 10px; }
-.add-task-row input { flex: 1; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.4rem; outline: none; }
-.add-task-row input:focus { border-color: #f0a500; }
-.progress-bar { height: 5px; background: #1e2330; border-radius: 3px; overflow: hidden; margin-bottom: 14px; }
-.progress-fill { height: 100%; border-radius: 3px; transition: width .4s; }
-.progress-label { font-size: 1.25rem; color: #6b7280; margin-bottom: 6px; }
-/* STRECKEN */
-.track-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.track-card { background: #1a1e27; border: 1px solid #1e2330; border-radius: 6px; padding: 14px; cursor: pointer; transition: background .12s; }
-.track-card:hover { background: #1e2330; }
-.track-name { font-size: 1.6rem; font-weight: bold; margin-bottom: 6px; }
-.track-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-.tag { font-size: 1.15rem; padding: 2px 8px; border-radius: 4px; background: #252b38; color: #9ca3af; }
-.tag.endurance { background: rgba(46,204,113,.15); color: #2ecc71; }
-.tag.multiclass { background: rgba(52,152,219,.15); color: #3498db; }
-.tag.sprint { background: rgba(240,165,0,.15); color: #f0a500; }
-/* NOTIZEN */
-.note-area { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 6px; padding: 14px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; line-height: 1.7; outline: none; resize: vertical; min-height: 220px; transition: border-color .15s; }
-.note-area:focus { border-color: #f0a500; }
-.note-saved { font-size: 1.2rem; color: #2ecc71; opacity: 0; transition: opacity .3s; }
-.note-saved.show { opacity: 1; }
-/* FORMS */
-label { display: block; font-size: 1.2rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-input, select, textarea { width: 100%; background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; color: #e0e4f0; font-family: Arial, sans-serif; font-size: 1.5rem; outline: none; transition: border-color .15s; }
-input:focus, select:focus, textarea:focus { border-color: #f0a500; }
-textarea { resize: vertical; min-height: 70px; }
-.form-group { margin-bottom: 13px; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.divider { height: 1px; background: #1e2330; margin: 14px 0; }
-/* CHECKBOXEN GRUPPE */
-.check-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
-.check-item { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 1.4rem; }
-.check-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #f0a500; cursor: pointer; flex-shrink: 0; }
-/* COLORS */
-.color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.col-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all .15s; }
-.col-opt.sel { border-color: #fff; transform: scale(1.2); }
-/* MODALS */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.78); z-index: 9999; align-items: center; justify-content: center; }
-.modal-bg.open { display: flex; }
-.modal { background: #161920; border: 1px solid #2a3040; border-top: 3px solid #f0a500; border-radius: 8px; padding: 22px; width: 500px; max-width: 96vw; max-height: 92vh; overflow-y: auto; }
-.modal-title { font-size: 1.8rem; font-weight: bold; color: #f0a500; margin-bottom: 18px; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-.empty { text-align: center; padding: 50px 20px; color: #5a6070; }
-.empty .icon { font-size: 3.5rem; margin-bottom: 10px; }
-.empty .txt { font-size: 1.6rem; margin-bottom: 16px; }
-.info-box { background: #0d0f13; border: 1px solid #2a3040; border-radius: 5px; padding: 9px 12px; font-size: 1.3rem; color: #6b7280; margin-bottom: 10px; }
-</style>
+  <title>SPR Reglement</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 62.5%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #f4f4f5;
+      padding: 10px;
+      font-size: 1.8rem;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 50%, #0f0f0f 0%, #000 100%);
+    }
+
+    .banner {
+      background: rgba(43,43,43,0.85);
+      border-left: 5px solid #3DFFB3;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin: 0 auto 20px;
+      max-width: 900px;
+      box-shadow: 0 4px 20px rgba(61,255,179,0.2);
+      backdrop-filter: blur(10px);
+    }
+    .banner h1 { font-size: 3.4rem; font-weight: bold; color: #3DFFB3; text-shadow: 0 0 18px rgba(61,255,179,0.4); }
+    .banner p { margin-top: 10px; font-size: 2rem; line-height: 1.8; color: #f4f4f5; }
+
+    /* Tabs */
+    .tabs-wrapper {
+      max-width: 900px;
+      margin: 0 auto 16px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 12px 10px;
+      background: rgba(43,43,43,0.85);
+      border: 2px solid rgba(61,255,179,0.2);
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 1.55rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(10px);
+      line-height: 1.4;
+    }
+    .tab-btn:hover { border-color: #3DFFB3; color: #3DFFB3; }
+    .tab-btn.active {
+      background: rgba(61,255,179,0.12);
+      border-color: #3DFFB3;
+      color: #3DFFB3;
+      box-shadow: 0 0 15px rgba(61,255,179,0.2);
+    }
+    .tab-btn small { display: block; font-size: 1.2rem; font-weight: normal; color: inherit; opacity: 0.75; margin-top: 2px; }
+
+    /* Panels */
+    .tab-panel { display: none; max-width: 900px; margin: 0 auto; }
+    .tab-panel.active { display: block; }
+
+    .no-results { text-align: center; padding: 40px; color: #666; font-size: 2rem; }
+
+    /* Para accordion */
+    .para-item {
+      background: rgba(43,43,43,0.85);
+      border-left: 5px solid #3DFFB3;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(10px);
+    }
+    .para-item:hover {
+      border: 2px solid #3DFFB3;
+      border-left: 5px solid #3DFFB3;
+      box-shadow: 0 0 20px rgba(61,255,179,0.2);
+    }
+    .para-header {
+      padding: 14px 50px 14px 20px;
+      cursor: pointer;
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #f4f4f5;
+      position: relative;
+      transition: color 0.2s;
+    }
+    .para-item:hover .para-header { color: #3DFFB3; }
+    .para-header::after {
+      content: "➤";
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s;
+      color: #3DFFB3;
+      font-size: 1.6rem;
+    }
+    .para-item.active .para-header::after { transform: translateY(-50%) rotate(90deg); }
+    .para-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      padding: 0 20px;
+      font-size: 1.8rem;
+      color: #e0e0e0;
+      line-height: 1.9;
+    }
+    .para-item.active .para-content { max-height: 8000px; padding-bottom: 14px; }
+    .para-content p { margin: 8px 0; }
+
+    mark { background: rgba(61,255,179,0.25); color: #3DFFB3; border-radius: 3px; padding: 0 2px; }
+
+    /* Tables */
+    .para-content table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .para-content th, .para-content td { border: 1px solid #3a3a3a; padding: 10px 12px; text-align: left; }
+    .para-content thead th { background: rgba(61,255,179,0.1); color: #3DFFB3; font-weight: bold; }
+    .para-content tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .section-row td { text-align: center; font-weight: bold; background-color: rgba(61,255,179,0.15); color: #3DFFB3; }
+    .straf-table th:nth-child(1), .straf-table td:nth-child(1) { width: 70%; }
+    .straf-table th:nth-child(2), .straf-table td:nth-child(2) { width: 30%; }
+
+    @media (max-width: 900px) {
+      html { font-size: 55%; }
+      body { padding: 5px; }
+      .tab-btn { min-width: 100px; font-size: 1.35rem; }
+    }
+    @media (max-width: 600px) {
+      html { font-size: 50%; }
+      .tab-btn { min-width: 80px; font-size: 1.2rem; }
+      .banner h1 { font-size: 2.4rem; }
+    }
+
+
+    /* Para header badges */
+    .para-header .badge {
+      display: inline-block;
+      background: rgba(61,255,179,0.15);
+      border: 1px solid rgba(61,255,179,0.4);
+      color: #3DFFB3;
+      font-size: 2.2rem;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-right: 12px;
+      vertical-align: middle;
+      letter-spacing: 0.03em;
+    }
+
+    /* Scroll to top */
+    #scrollTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      background: rgba(43,43,43,0.95);
+      border: 2px solid #3DFFB3;
+      border-radius: 50%;
+      color: #3DFFB3;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 100;
+      box-shadow: 0 0 14px rgba(61,255,179,0.3);
+    }
+    #scrollTop.visible { opacity: 1; pointer-events: all; }
+    #scrollTop:hover { background: rgba(61,255,179,0.15); }
+
+    /* Keyword highlighting */
+    .kw-red   { color: #cc4444; font-weight: bold; }
+    .kw-orange { color: #cc8822; font-weight: bold; }
+    .kw-green  { color: #2ab87e; font-weight: bold; }
+  </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo">SPR <span>PLANER</span></div>
-  <div class="tab-bar">
-    <button class="tab-btn active" data-view="serien">Serien</button>
-    <button class="tab-btn" data-view="dashboard">Dashboard</button>
-    <button class="tab-btn" data-view="strecken">Strecken</button>
-    <button class="tab-btn" data-view="notizen">Notizen</button>
-  </div>
-  <div class="topbar-right">
-    <button class="btn btn-primary" id="btn-top-new" style="display:none">+ Neue Serie</button>
-    <button class="btn btn-primary" id="btn-top-new-track" style="display:none">+ Strecke</button>
-  </div>
+<canvas id="bgCanvas"></canvas>
+<script>
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+const streaks = Array.from({length: 10}, () => ({
+  x: Math.random() * w,
+  y: Math.random() * h,
+  speed: 0.4 + Math.random() * 0.8,
+  length: 60 + Math.random() * 120,
+  opacity: 0.04 + Math.random() * 0.07,
+  width: 0.5 + Math.random() * 1,
+  green: Math.random() > 0.6
+}));
+
+const markers = Array.from({length: 18}, () => ({
+  x: Math.random() * w,
+  y: Math.random() * h,
+  r: 0.8 + Math.random() * 1.8,
+  alpha: 0.03 + Math.random() * 0.05,
+  pulse: Math.random() * Math.PI * 2,
+  speed: 0.003 + Math.random() * 0.005
+}));
+
+function draw() {
+  ctx.fillStyle = "rgba(10, 10, 10, 0.25)";
+  ctx.fillRect(0, 0, w, h);
+
+  streaks.forEach(s => {
+    ctx.beginPath();
+    ctx.moveTo(s.x - s.length, s.y);
+    ctx.lineTo(s.x, s.y);
+    ctx.strokeStyle = s.green
+      ? `rgba(61,255,179,${s.opacity})`
+      : `rgba(220,220,220,${s.opacity})`;
+    ctx.lineWidth = s.width;
+    ctx.stroke();
+    s.x += s.speed;
+    if (s.x - s.length > w) {
+      s.x = -s.length;
+      s.y = Math.random() * h;
+    }
+  });
+
+  markers.forEach(m => {
+    m.pulse += m.speed;
+    const a = m.alpha * (0.4 + 0.6 * Math.sin(m.pulse));
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(61,255,179,${a})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+<div class="banner">
+  <h1>Snail Pace Reglement</h1>
+  <p>Für faire, respektvolle und sportliche Rennen haben wir klare Regeln,
+     die für alle Mitglieder gelten und Leidenschaft, Disziplin sowie Teamgeist fördern.</p>
 </div>
 
-<!-- VIEW: SERIEN -->
-<div class="view active" id="view-serien">
-  <div class="sidebar">
-    <div class="sidebar-label">Serien</div>
-    <div class="series-list" id="sidebar-list"></div>
-    <div class="sidebar-footer">
-      <button class="btn-new-sb" id="btn-sb-new">+ Neue Serie</button>
-    </div>
-  </div>
-  <div class="main" id="main"></div>
+<div class="tabs-wrapper" id="tabsWrapper">
+  <button class="tab-btn active" data-tab="kap1">Allgemeines<small>Kapitel 1</small></button>
+  <button class="tab-btn" data-tab="kap2">Vorbereitung<small>Kapitel 2</small></button>
+  <button class="tab-btn" data-tab="kap3">Ablauf Rennen<small>Kapitel 3</small></button>
+  <button class="tab-btn" data-tab="kap4">Nach dem Rennen<small>Kapitel 4</small></button>
+  <button class="tab-btn" data-tab="strafen">Strafenkatalog<small>&nbsp;</small></button>
 </div>
 
-<!-- VIEW: DASHBOARD -->
-<div id="view-dashboard">
-  <div id="dashboard-content"></div>
-</div>
-
-<!-- VIEW: STRECKEN -->
-<div id="view-strecken">
-  <div id="strecken-content" style="padding:0"></div>
-</div>
-
-<!-- VIEW: NOTIZEN -->
-<div id="view-notizen">
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-title"><span>&#128221; Allgemeiner Notizblock</span><span class="note-saved" id="note-global-saved">Gespeichert &#10003;</span></div>
-    <textarea class="note-area" id="note-global" placeholder="Notizen, Ideen, allgemeine ToDos..."></textarea>
-  </div>
-  <div class="card" id="note-serie-card" style="display:none">
-    <div class="card-title"><span id="note-serie-label">&#128221; Serien-Notizen</span><span class="note-saved" id="note-serie-saved">Gespeichert &#10003;</span></div>
-    <textarea class="note-area" id="note-serie-area" placeholder="Notizen zu dieser Serie..."></textarea>
-  </div>
-  <p style="font-size:1.25rem;color:#5a6070;text-align:center">Wird automatisch gespeichert</p>
-</div>
-
-<!-- MODAL: SERIE -->
-<div class="modal-bg" id="modal-serie">
-  <div class="modal">
-    <div class="modal-title" id="modal-serie-title">Neue Serie</div>
-    <input type="hidden" id="f-id">
-    <div class="row2">
-      <div class="form-group"><label>Name *</label><input type="text" id="f-name" placeholder="z.B. iR Masters"></div>
-      <div class="form-group"><label>Simulator</label>
-        <select id="f-sim">
-          <option value="iRacing">iRacing</option>
-          <option value="ACC">ACC</option>
-          <option value="LMU">LMU</option>
-          <option value="AMS2">AMS2</option>
-          <option value="AC">Assetto Corsa</option>
-        </select>
-      </div>
-    </div>
-    <div class="row2">
-      <div class="form-group"><label>Saison</label><input type="text" id="f-season" placeholder="S1 2026"></div>
-      <div class="form-group"><label>Status</label>
-        <select id="f-status">
-          <option value="planned">Geplant</option>
-          <option value="prep">Vorbereitung</option>
-          <option value="active">Aktiv</option>
-          <option value="done">Abgeschlossen</option>
-        </select>
-      </div>
-    </div>
-    <div class="row2">
-      <div class="form-group"><label>Start</label><input type="date" id="f-start"></div>
-      <div class="form-group"><label>Ende</label><input type="date" id="f-end"></div>
-    </div>
-    <div class="form-group"><label>Verantwortlich</label><input type="text" id="f-owner" placeholder="Discord-Name"></div>
-    <div class="form-group"><label>Farbe</label>
-      <div class="color-picker" id="color-picker">
-        <div class="col-opt sel" data-color="#f0a500" style="background:#f0a500"></div>
-        <div class="col-opt" data-color="#3498db" style="background:#3498db"></div>
-        <div class="col-opt" data-color="#2ecc71" style="background:#2ecc71"></div>
-        <div class="col-opt" data-color="#e74c3c" style="background:#e74c3c"></div>
-        <div class="col-opt" data-color="#9b59b6" style="background:#9b59b6"></div>
-        <div class="col-opt" data-color="#1abc9c" style="background:#1abc9c"></div>
-        <div class="col-opt" data-color="#e67e22" style="background:#e67e22"></div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" id="btn-del-serie" style="display:none;margin-right:auto">Loeschen</button>
-      <button class="btn btn-secondary btn-sm" id="btn-cancel-serie">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" id="btn-save-serie">Speichern</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: AUFGABE -->
-<div class="modal-bg" id="modal-task">
-  <div class="modal">
-    <div class="modal-title">Aufgabe bearbeiten</div>
-    <input type="hidden" id="t-sid">
-    <input type="hidden" id="t-tid">
-    <div class="form-group"><label>Aufgabe *</label><textarea id="t-text" placeholder="Was muss erledigt werden?" style="min-height:90px"></textarea></div>
-    <div class="row2">
-      <div class="form-group"><label>Faellig am</label><input type="date" id="t-date"></div>
-      <div class="form-group"><label>Zustaendig</label><input type="text" id="t-owner" placeholder="Name"></div>
-    </div>
-    <div class="form-group"><label>Notiz zur Aufgabe</label><textarea id="t-note" placeholder="Details, Links..." style="min-height:100px"></textarea></div>
-    <div class="divider"></div>
-    <div class="form-group">
-      <label>Discord Erinnerung</label>
-      <div class="info-box" id="wh-status">Kein Webhook - bitte in Einstellungen konfigurieren</div>
-      <input type="text" id="t-wh-msg" placeholder="Nachricht (leer = Standard)" style="margin-top:6px">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" id="btn-del-task" style="margin-right:auto">Loeschen</button>
-      <button class="btn btn-secondary btn-sm" id="btn-cancel-task">Abbrechen</button>
-      <button class="btn btn-secondary btn-sm" id="btn-send-now" style="display:none">&#128276; Senden</button>
-      <button class="btn btn-primary btn-sm" id="btn-save-task">Speichern</button>
+<!-- ══ KAPITEL 1 ══ -->
+<div class="tab-panel active" id="panel-kap1">
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§1.</span> Verhaltenscodex bei SPR</div>
+    <div class="para-content">
+      <p>1. Mit dem Akzeptieren des Reglements stimmst du allen Regeln automatisch zu.</p>
+      <p>2. Durch die Teilnahme bei SPR stimmst du zu, dass wir deinen Ingame Namen dauerhaft in Live-Übertragungen, für statistische Zwecke auf unserer Webseite oder anderen Plattformen verwenden.</p>
+      <p>3. Verstöße gegen das Reglement sowie Verhalten, das der Gemeinschaft schadet, kann von der Orga geahndet werden. Der Orga wird ein Ermessensspielraum eingeräumt, sodass zu Beginn eine Ermahnung möglich ist.</p>
+      <p>4. Alle Benutzer unseres Discords müssen sich mit Klarnamen benennen.</p>
+      <p>5. Nachrichten, die mit @Mitglied Namen anfangen, um Rennunfälle öffentlich zu diskutieren, sind untersagt. Nutzt PNs oder das Ticketsystem, falls notwendig.</p>
+      <p>6. Aussagen von Administratoren und Moderatoren sind zu befolgen.</p>
+      <p>7. Werben für andere Rennen, kommerzielle Werbung jeglicher Art sowie Werbung für andere Veranstaltungen ist verboten!</p>
+      <p>8. Das Teilen von personenbezogenen Daten ist verboten.</p>
+      <p>9. Bei Nichteinhaltung des Reglements behält sich die Orga vor, ein Mitglied in ein Timeout zu setzen. Bei weiteren Vergehen erfolgen härtere Sanktionen.</p>
+      <p>10. Das Speichern der Renn- oder Trainings-Wiederholung ist notwendig, um Vorfälle zu belegen.</p>
+      <p>11. Es ist möglich, dass jederzeit ein Mitglied streamt – damit musst du einverstanden sein.</p>
+      <p>12. Ein Raceapp Account ist Pflicht. Ohne einen Account bei Raceapp kann deine Rennwertung nicht angezeigt werden.</p>
     </div>
   </div>
 </div>
 
-<!-- MODAL: STRECKE -->
-<div class="modal-bg" id="modal-track">
-  <div class="modal">
-    <div class="modal-title" id="modal-track-title">Neue Strecke</div>
-    <input type="hidden" id="tr-id">
-    <div class="row2">
-      <div class="form-group"><label>Streckenname *</label><input type="text" id="tr-name" placeholder="z.B. Nurburgring GP"></div>
-      <div class="form-group"><label>Land</label><input type="text" id="tr-country" placeholder="z.B. Deutschland"></div>
+<!-- ══ KAPITEL 2 ══ -->
+<div class="tab-panel" id="panel-kap2">
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§2.</span> An- und Abmelden; Liveries und Chatverhalten</div>
+    <div class="para-content">
+      <p>1. Mit der Registrierung ist jeder Fahrer automatisch für alle Rennen der Serie angemeldet. Eine weitere Bestätigung ist nicht notwendig!</p>
+      <p>2. iRacing: Um an einer Serie teilzunehmen, muss zuvor die Reglement-Abfrage erfolgreich abgeschlossen werden. Erst danach ist ein Beitritt zur Serie möglich.</p>
+      <p>3. iRacing: Für die Teilnahme an unseren Serien gilt ein maximales Rating von 3500. Eine Ausnahme bilden Stammfahrer, die wir persönlich kennen, sie dürfen auch mit einem höheren Rating teilnehmen. Fahrer, die wir bereits kennen, aber noch keine Stammfahrer sind und sich auf der Strecke korrekt verhalten, können ebenfalls für die Teilnahme zugelassen werden.</p>
+      <p>4. Für jede Sim gilt: Sollte ein Fahrer nicht teilnehmen können, muss er sich abmelden. Erfolgt dies nicht, wird dies mit Punktabzug bestraft.</p>
+      <p>5. iRacing: Sollte es vermehrt zu Unfällen kommen, kann ein zusätzliches Briefing für die betroffenen Fahrer angesetzt werden. Wird dieses Briefing nicht absolviert, ist eine Teilnahme am nächsten Rennen nicht möglich.
+Fahrer, die dem Rennen fernbleiben, ohne sich zuvor korrekt über die RaceApp abzumelden, werden aus der iRacing-Liga entfernt. Eine ordnungsgemäße Abmeldung über die RaceApp verhindert diese Maßnahme.
+Wird ein Fahrer aufgrund einer fehlenden Abmeldung aus der Liga entfernt, muss er sich eigenständig über das Support-System melden, um wieder aufgenommen zu werden.
+Die Verantwortung für Abmeldung und Teilnahme liegt vollständig beim jeweiligen Fahrer.</p>
+      <p>6. Ein DNS kann zur automatischen Abmeldung aus dem Rennbetrieb führen. Zeitpunkt und Vorgehen liegen im Ermessen der Orga.</p>
+      <p>7. Individuelle Fahrzeuglackierungen sind erlaubt. Jegliche Form von Tabakwerbung sowie anstößige oder unangemessene Inhalte ist strikt verboten. Bei Verstößen kann ein sofortiger Ausschluss aus der Liga und/oder Community erfolgen.</p>
+      <p>8. Während des freien Trainings ist der In-Game-Chat für kurze Abstimmungen erlaubt, Dauerchat nicht. In Qualifying und Rennen ist der Chat strengstens untersagt. Ausnahme iRacing: „Pitting in", „Pitting out", „Left side" und „Right side" sind pro Situation jeweils nur einmal erlaubt.</p>
+      <p>9. Die Nutzung des Ingame-Voice-Chats ist grundsätzlich untersagt. Ausnahme: Orga zu Rennzwecken. Anweisungen der Rennleitung sind jederzeit umzusetzen.</p>
     </div>
-    <div class="row3">
-      <div class="form-group"><label>Rundenlaenge (km)</label><input type="number" id="tr-len" placeholder="5.14" step="0.01"></div>
-      <div class="form-group"><label>Richtwert Rundenzeit</label><input type="text" id="tr-laptime" placeholder="z.B. 1:58.0"></div>
-      <div class="form-group"><label>Max. Fahrzeuge</label><input type="number" id="tr-cars" placeholder="30"></div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§3.</span> Rennbetrieb allgemein</div>
+    <div class="para-content">
+      <p>1. Es ist ein Streichergebnis möglich, ausgeschlossen ist ein DSQ.</p>
+      <p>2. Fahrzeugwechsel: einmal pro Saison, vorher bestes Ergebnis gestrichen. Klassenwechsel: alle Punkte gestrichen. Ausnahmen wie freie Fahrzeugwahl sind in den Serienangaben aufgeführt.</p>
     </div>
-    <div class="form-group">
-      <label>Eignung</label>
-      <div class="check-group">
-        <label class="check-item"><input type="checkbox" id="tr-sprint"> Sprint</label>
-        <label class="check-item"><input type="checkbox" id="tr-endurance"> Endurance</label>
-        <label class="check-item"><input type="checkbox" id="tr-multiclass"> Multiclass</label>
-        <label class="check-item"><input type="checkbox" id="tr-night"> Nacht</label>
-        <label class="check-item"><input type="checkbox" id="tr-wet"> Regen</label>
-      </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§4.</span> Einteilung in Wertungsklassen (Hotstints)</div>
+    <div class="para-content">
+      <p>1. Die Fahrer werden je nach Stärke in zwei bis drei Wertungsklassen eingeteilt.</p>
+      <p>2. Für die Einteilung müssen auf drei Strecken je 7 Runden gefahren werden, davon mindestens 5 gültige. Die Hotstints sind auf SPR-Servern mit max. Sprit für 9 Runden plus Outlap zu absolvieren.</p>
+      <p>3. Der Fahrer muss die Organisation per Ticketsystem informieren, sobald die Zeiten abrufbar sind. Datum, Fahrzeug und Uhrzeit angeben. Der ACC-Name muss mit dem bei RaceApp hinterlegten Namen übereinstimmen.</p>
+      <p>4. Aus den gültigen Zeiten der drei Strecken wird ein Durchschnittswert zur Einteilung berechnet.</p>
+      <p>5. Sollten Zweifel an der Echtheit der Rundenzeiten bestehen, behalten wir uns das Recht vor, diese mit weiteren Zeiten zu vergleichen.</p>
+      <p>6. Die Hotlap-Server mit den Strecken aus dem aktuellen Rennkalender werden von SPR bereitgestellt.</p>
+      <p>7. Startzeit der Server und Abgabefrist für die Hotstints werden im Info-Channel rechtzeitig bekanntgegeben.</p>
+      <p>8. Das Fahrzeug der Hotstints ist gleichzeitig das Fahrzeug für die gesamte Season.</p>
     </div>
-    <div class="form-group"><label>Notiz</label><textarea id="tr-note" placeholder="Besonderheiten, Links..."></textarea></div>
-    <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" id="btn-del-track" style="display:none;margin-right:auto">Loeschen</button>
-      <button class="btn btn-secondary btn-sm" id="btn-cancel-track">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" id="btn-save-track">Speichern</button>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§5.</span> Teleportieren auf der Strecke</div>
+    <div class="para-content">
+      <p>Bei Trainings- und Qualifikation Sessions darf mittels ESC-Taste zurück an die Box teleportiert werden – von einer sicheren Stelle abseits der Strecke. Im Rennen: Sollte eine sichere Weiterfahrt nicht mehr möglich sein, darf ebenfalls zurück an die Box teleportiert werden.</p>
     </div>
   </div>
 </div>
 
-<!-- MODAL: EINSTELLUNGEN -->
-<div class="modal-bg" id="modal-settings">
-  <div class="modal">
-    <div class="modal-title">&#9881; Webhook Einstellungen</div>
-    <div class="form-group"><label>Discord Webhook URL</label><input type="text" id="s-webhook" placeholder="https://discord.com/api/webhooks/..."></div>
-    <div class="form-group"><label>Anzeigename</label><input type="text" id="s-wh-name" placeholder="SPR Planer"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary btn-sm" id="btn-cancel-settings">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" id="btn-save-settings">Speichern</button>
+<!-- ══ KAPITEL 3 ══ -->
+<div class="tab-panel" id="panel-kap3">
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§6.</span> Briefing</div>
+    <div class="para-content">
+      <p>1. Das Briefing ist für jeden Fahrer Pflicht. Es enthält die Streckeninfos, die sich zusätzlich selbst angeeignet werden sollten.</p>
+      <p>2. Während des Briefings dürfen die Fahrer nicht sprechen. Nach Ende des Briefings können Fragen gestellt werden.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§7.</span> Qualifikation</div>
+    <div class="para-content">
+      <p>1. Fahrern auf einer schnellen Runde ist freie Fahrt einzuräumen. Ist die eigene Runde ungültig oder man befindet sich auf der Outlap, hat man nachfolgenden Fahrzeugen Platz zu machen. Ghosting in der Boxengasse zum Überholen ist nicht erlaubt.</p>
+      <p>2. Bei Multiclass Rennen sind langsamere Klassen an einer geeigneten Stelle zu überholen.</p>
+      <p>3. Die Teilnahme an der Qualifikation ist verpflichtend. Absichtliches Nicht-Setzen einer Rundenzeit, bewusst langsames Fahren oder gezieltes Zurückfallen (z.B. „Last to First") sind untersagt und führen zur Disqualifikation.</p>
+      <p>4. Nach Ablauf der vorgegebenen Zeit dürfen keine neuen gezeiteten Runden mehr gestartet werden. Ein Verstoß führt zur Disqualifikation.</p>
+      <p>5. iRacing: Während der Qualifikation darf das Fahrzeug nicht unnötig verlangsamt werden. Es gilt eine Mindestgeschwindigkeit von 80 km/h, sofern der Streckenabschnitt dies zulässt. Wird die Geschwindigkeit dennoch weiter reduziert und erhält ein nachfolgender Fahrer dadurch eine Ingame-Strafe (z. B. eine Drive-Through-Strafe), kann der Vorfall gemeldet werden.</p>
+      <p>6. Auf der Strecke darf kein Stau durch das Reduzieren der Geschwindigkeit entstehen. Bereits während der gesamten Outlap ist der Abstand zum vorausfahrenden Fahrzeug so anzupassen, dass jeder Fahrer seine Runde ohne Behinderung beginnen und seine Zeit setzen kann.</p>
+      <p>7. Befindet sich ein Fahrer in seiner Outlap und ein anderer Fahrer kommt in einer gültigen Qualifikationsrunde von hinten, muss diesem umgehend Platz gemacht werden. Dies sollte nicht in einer Kurve erfolgen, sondern auf der nächstmöglichen Geraden oder an einer geeigneten Stelle, auch wenn diese noch so kurz ist.</p>
+      <p>8. Verstöße während des Qualifyings können vom betroffenen Fahrer jederzeit innerhalb des Reportfensters gemeldet und eingereicht werden.</p>
+      <p>9. Die genannten Beispiele sind nicht abschließend.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§8.</span> Rennregeln / Verhalten auf der Strecke</div>
+    <div class="para-content">
+      <p>1. <strong>Formationsrunde:</strong> Starkes Verzögern ist untersagt. Weaving (Reifenaufwärmen) nur innerhalb der eigenen Spur. Jeglicher Kontakt wird bestraft und ist verpflichtend zu reporten.</p>
+      <p>2. Als Strecke gilt der Bereich zwischen den Streckenbegrenzungslinien (Kerbs und Abweiser befinden sich NICHT auf der Strecke). Ausnahmen bilden Kurven, bei denen Kerbs und Abweiser im realen Motorsport Teil der Strecke sind.</p>
+      <p>3. Fahrzeuge mit mehr als zwei Rädern jenseits der Streckenbegrenzungslinien gelten als „off track".</p>
+      <p>4. Boxen Ein- und Ausfahrten sind nicht zu blockieren und mit Vorsicht zu befahren.</p>
+      <p>5. Die Leitlinie (weiße Linien) darf beim Ein-/Ausfahren nicht überfahren werden – ausgenommen zur Unfallvermeidung. Die Boxenlinie gilt erst als überfahren, wenn ein Reifen voll umfänglich über der Linie ist.</p>
+      <p>6. Bei NOS-Cup und LMU-Veranstaltungen werden Boxenlinien von Stewards nicht überprüft.</p>
+      <p>7. Sind die Vorderräder des hinteren Fahrzeugs in der Anbremszone auf Höhe der Hinterräder des Vorausfahrenden, müssen beide Fahrer ausreichend Platz gewähren.</p>
+      <p>8. Serverseitig sind Pit Limiter, Ideallinie und Auto-Lenkung deaktiviert.</p>
+      <p>9. Jede Form von Cheating ist strengstens verboten! Bugusing ebenfalls untersagt.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§9.</span> Flaggensystem</div>
+    <div class="para-content">
+      <p>1. <strong>Grüne Flagge:</strong> Rennen gestartet / Strecke frei / vorherige Flaggensituation aufgehoben. Gilt ab der Höhe, wo sie geschwenkt wird.</p>
+      <p>2. <strong>Weiße Flagge:</strong> Langsames Fahrzeug im kommenden Streckenabschnitt. Überholen erlaubt.</p>
+      <p>3. <strong>Blaue Flagge:</strong> Überrundendes Fahrzeug nähert sich. Im Qualifying: Fahrzeug auf gültiger Runde.</p>
+      <p>4. <strong>Gelbe Flagge:</strong> Allgemeine Gefahr im Sektor. Fahrweise anpassen, Überholen verboten. Ignorieren ist ein schwerwiegender Verstoß.</p>
+      <p>5. <strong>Schwarz-Orangene Flagge:</strong> Auto defekt. Sofort Fahrweise anpassen, kein Verteidigen, Blinken zur Richtungsanzeige, Ideallinie verlassen, Box ansteuern. iRacing (Meatball): unverzüglich RTG – Nichtbeachtung = DSQ.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§10.</span> Überrundungen und Rückrunden</div>
+    <div class="para-content">
+      <p>1. Gegenseitige Rücksichtnahme wird erwartet, insbesondere bei Überrundungen.</p>
+      <p>2. Der zu Überrundende lässt den Überrundenden so schnell wie möglich an geeigneter Stelle vorbei (max. eine Runde / Nordschleife max. 90 sek.). Bei ≤ 0,3 Sek. Abstand muss auf der Geraden vorbeigelassen werden.</p>
+      <p>3. Der zu überrundende Fahrer muss die Ideallinie nicht verlassen.</p>
+      <p>4. Bei zwei Fahrzeugen im Zweikampf: Überrundung mit Rücksicht vornehmen.</p>
+      <p>5. Verteidigen unter Blauer Flagge ist untersagt.</p>
+      <p>6. Sich zurückrundende Fahrzeuge dürfen nicht aktiv blockiert werden. Nach der Rückrundung hat das Fahrzeug eine Runde Zeit, das Zeitfenster (1 Sek.) für die Blaue Flagge zu überwinden.</p>
+      <p>7. Blinker signalisiert die Fahrtrichtung (links = links fahren / rechts = rechts fahren). iRacing: Chat erlaubt.</p>
+      <p>8. Bei Multiclass ist die Geschwindigkeitsdifferenz zu beachten.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§11.</span> Positionskampf</div>
+    <div class="para-content">
+      <p>1. Bei einem missglückten Überholversuch darf die Strecke verlassen werden. Eine dadurch gewonnene Platzierung muss innerhalb der nächsten drei Kurven zurückgegeben werden.</p>
+      <p>2. Zur Abwehr eines Angriffs darf die Linie einmal gewechselt werden. Ein weiterer Wechsel zurück ist nicht zulässig. Blocking als Reaktion auf den Angreifer ist verboten.</p>
+      <p>3. Moving under braking ist untersagt. Mutwilliges Abdrängen ist strikt verboten.</p>
+      <p>4. Ohne vorangegangenes Angriffsmanöver ist ein freier Linienwechsel jederzeit gestattet. Ein weiterer Linienwechsel ist verboten, wenn der Gegner in ca. 0,5 Sek. Abstand folgt.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§12.</span> Sicheres Zurückkehren auf die Strecke</div>
+    <div class="para-content">
+      <p>1. Die Verwendung des Radar Overlays muss berücksichtigt werden.</p>
+      <p>2. Werden nachfolgende Fahrzeuge gezwungen zu bremsen, auszuweichen oder die Strecke zu verlassen, gilt dies als „unsafe rejoin" und wird bestraft.</p>
+      <p>3. Nachfolgende Fahrzeuge bleiben in der Pflicht zur vorsichtigen Fahrweise bei erkennbaren Hindernissen oder gezeigter gelber Flagge.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§13.</span> Verhalten bei Unfällen / Drehern und Off Track</div>
+    <div class="para-content">
+      <p>1. Unfälle sind unter allen Umständen zu verhindern. Das Verlassen der Strecke zur Unfallvermeidung bleibt straffrei.</p>
+      <p>2. Befindet sich ein Fahrzeug seitlich oder entgegen der Fahrtrichtung auf der Strecke, darf es nicht bewegt werden, bis die Hinterherfahrenden passiert sind. Bremse halten bis zur gefahrlosen Weiterfahrt.</p>
+      <p>3. Wird auf einen klar erkennbaren Vorfall nicht durch angemessene Geschwindigkeitsreduzierung reagiert, steht dies dem Ignorieren einer gelben Flagge gleich.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§14.</span> Forcing another Car off Track</div>
+    <div class="para-content">
+      <p>1. Jegliches Abdrängen eines anderen Fahrers von der Strecke ist verboten.</p>
+      <p>2. Ein Fahrverhalten, das einen anderen Fahrer zur Vermeidung eines Unfalls zwingt, seine Fahrlinie zu verlassen und dadurch einen erheblichen Nachteil erleidet, steht dem Abdrängen gleich – auch wenn das Fahrzeug die Strecke nicht vollständig verlassen muss.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§15.</span> Massencrash</div>
+    <div class="para-content">
+      <p>Unfälle aller Art mit nennenswerter Beeinträchtigung, ab 3 Fahrzeugen + eigenes Auto involviert.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§16.</span> Causing a Collision</div>
+    <div class="para-content">
+      <p>Unfälle aller Art, welche eine Beeinträchtigung des betroffenen Fahrers zur Folge haben.Es wird  wie folgt unterschieden.</p>
+      <p>5 Sekunden</p> 
+      <p>→ leichte Berührung ohne Dreher. Nicht jede leichte Berührung führt automatisch zu einer Strafe, zum Beispiel wenn dadurch nur ein Platz verloren geht oder ein Fahrer kurz neben die Strecke kommt.</p>
+      <p>10 Sekunden</p> 
+      <p>→ Berührung, die dazu führt, dass sich ein Fahrer dreht.</p>
+      <p>15 Sekunden</p> 
+      <p>→ Berührung, die zu einem Einschlag, Folgeunfall oder größeren Schaden führt.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§17.</span> Absichtliches Verursachen einer Kollision</div>
+    <div class="para-content">
+      <p>Absichtlich herbeigeführte Fahrzeugkontakte sind zu unterlassen. Einmaliger Verstoß = Saisonsperre, zweimaliger innerhalb der Community = Ausschluss.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§18.</span> Unsportliches Verhalten</div>
+    <div class="para-content">
+      <p>1. Bewusstes und exzessives Abkürzen der Strecke mit dauerhaftem Vorteil (Track Limits sind erlaubt).</p>
+      <p>2. Absichtliches Umfahren von Schildern.</p>
+      <p>3. Absichtliches Behindern eines Fahrers im Qualifying oder beim Überrundungsvorgang.</p>
+      <p>4. Mutwilliges Versperren von Streckenabschnitten und gezielte Berührungen ohne Unfallfolge.</p>
+      <p>5. Ignorieren der Geschwindigkeitsbegrenzung in der Boxengasse im Qualifying.</p>
+      <p>6. Exzessiver Einsatz der Lichthupe gilt als unsportlich; angemessene Nutzung zur Warnung ist erlaubt.</p>
+      <p>7. Gefährliches Fahren, absichtliches langsames Fahren, off track fahren, allgemein auffälliges Fahrverhalten, etc.</p>
+      <p>Die genannten Tatbestände sind keine abschließende Aufzählung.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§19.</span> Aggressives Fahren</div>
+    <div class="para-content">
+      <p>1. Plötzlicher Linienwechsel als Reaktion auf einen Überholversuch des Hinterherfahrenden ist zu unterlassen.</p>
+      <p>2. Das Verlassen der Linie während des Bremsvorgangs (moving under braking) ist untersagt.</p>
+      <p>3. Absichtliches Ausbremsen eines Gegners ist verboten (Brake-Check).</p>
+      <p>Die genannten Tatbestände sind keine abschließende Aufzählung.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§20.</span> Rennende</div>
+    <div class="para-content">
+      <p>1. Das Rennen ist durch Überqueren der Start-Ziel-Linie zu beenden. Fahrzeug so abstellen, dass keine Kollisionen provoziert werden.</p>
+      <p>2. Das Beenden der letzten Runde in der Boxengasse mit Vorteil führt zur Disqualifikation.</p>
+      <p>3. Kontakte nach Rennende sind zu vermeiden.</p>
+      <p>4. Fahrer, die ihr Fahrzeug abstellen und eine Zeitstrafe erhalten, bekommen für je 5 Sek. der Strafe 2 Punkte abgezogen.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KAPITEL 4 ══ -->
+<div class="tab-panel" id="panel-kap4">
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§21.</span> Unfallmeldung / Report einreichen</div>
+    <div class="para-content">
+      <p>1. Das Ticketsystem öffnet am Folgetag um ca. 8 Uhr und schließt 24h später. Reports außerhalb dieses Zeitfensters werden kommentarlos gelöscht.</p>
+      <p>2. Die erste Runde wird von den Stewards auf Kontakte geprüft. Trainingsrennen und Trainingseinheiten sind ausgenommen; grobes Vergehen kann jedoch jederzeit via Ticket gemeldet werden. Hinweis: Die erste Runde der Nordschleife wird nur bis zur Arembergkurve gesichtet.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§22.</span> Strafen und Sanktionen</div>
+    <div class="para-content">
+      <p>1. Entscheidungen der Rennkommission sind grundsätzlich endgültig. Anfechtung ausschließlich per Community Ticket (keine Direktnachrichten oder Chats). Beleidigungen werden geahndet.</p>
+      <p>2. Erhält die Rennkommission nachträglich neue Hinweise, behält sie sich das Recht vor, ihre Entscheidung zu ändern.</p>
+      <p>3. Die Reko kann Fahrer zu einem direkten Gespräch einladen. Keine Reaktion innerhalb von 24h = Entscheidung ohne Stellungnahme.</p>
+      <p>4. Sanktionen dürfen nur von einem Steward / Organisator ausgesprochen werden.</p>
+      <p>5. Es dürfen nur Situationen angezeigt werden, die das eigene Fahrzeug betreffen.</p>
+      <p>6. Pro Situation muss eine separate Meldung eingereicht werden. Kombinierte Meldungen werden nicht berücksichtigt.</p>
+      <p>7. Bei einem Vergehen muss der Schuldige mit Sanktionen rechnen.</p>
+      <p>8. Es werden die im Strafenkatalog erwähnten Strafen angewendet.</p>
+      <p>9. Das Fordern von expliziten Strafen für andere Fahrer wird nicht geduldet. Die Orga behält sich vor, gegen den fordernden Fahrer selbst eine Strafe auszusprechen.</p>
+      <p>10. Mindestens drei Reko-Mitglieder bewerten alle rechtzeitig eingereichten Reports. In einen Vorfall involvierte Mitglieder sind nie Teil der bewertenden Rennkommission.</p>
+      <p>11. Die Orga / Stewards können eigenständig Kontakte oder Regelverstöße ohne eingereichten Report bearbeiten.</p>
+      <p>12. Stewards können von dem Fahrer ein Replay anfordern.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§23.</span> Disqualifikation</div>
+    <div class="para-content">
+      <p>1. Bei einer Disqualifikation entfallen alle im Rennen erfahrenen Punkte inklusive schnellster Runde.</p>
+      <p>2. Wird ein anderes Fahrzeug als in der Anmeldung gefahren, wird das Rennen mit DSQ gewertet. Im Wiederholungsfall: Ausschluss aus der Season.</p>
+      <p>3. Ein nicht absolvierter Pflichtboxenstopp innerhalb des Zeitfensters führt zur Disqualifikation – auch wenn die Simulation kein DSQ vergibt.</p>
+    </div>
+  </div>
+  <div class="para-item">
+    <div class="para-header"><span class="badge">§24.</span> Sperren</div>
+    <div class="para-content">
+      <p>1. Eine ausgesprochene Sperre bleibt bestehen, bis der Fahrer an seiner nächsten Session teilnimmt.</p>
+      <p>2. Eine Rennsperre wird in den Ergebnissen mit einem DSQ eingetragen, sodass sie nicht als Streichergebnis gewertet werden kann.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STRAFENKATALOG ══ -->
+<div class="tab-panel" id="panel-strafen">
+  <div class="para-item active">
+    <div class="para-header">Strafenkatalog – Übersicht</div>
+    <div class="para-content">
+      <table class="straf-table">
+        <thead><tr><th>Vorfall</th><th>Strafe</th></tr></thead>
+        <tbody>
+          <tr class="section-row"><td colspan="2">§ 1 - 5 Sekundenstrafen</td></tr>
+          <tr><td>§ 1.1 – Boxenlinie überfahren</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.2 – Unsafe Release beim Boxenstopp ohne Unfallfolge (nur LMU)</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.3 – Forcing another Car Off Track</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.4 – Aggressives Fahren (Waving, Blocking, Moving under Braking etc.)</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.5 – Unsafe Rejoin ohne Unfallfolgen</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.6 – Causing a Collision (ohne schwerwiegende Beeinträchtigung)</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.7 – Ingame Chat verwendet</td><td>5 sec.</td></tr>
+          <tr><td>§ 1.8 – Verwendung Ingame-Voice</td><td>5 sec.</td></tr>
+          <tr class="section-row"><td colspan="2">§ 2 - 10 Sekundenstrafen</td></tr>
+          <tr><td>§ 2.1 – Missachten blauer Flagge</td><td>10 sec.</td></tr>
+          <tr><td>§ 2.2 – Causing a Collision</td><td>10 sec.</td></tr>
+          <tr><td>§ 2.3 – Bremse nicht gehalten, ohne Unfallfolge</td><td>10 sec.</td></tr>
+          <tr><td>§ 2.4 – Auffahren auf das vorausfahrende Fahrzeug im Startprozedere (nur LMU)</td><td>10 sec.</td></tr>
+          <tr><td>§ 2.5 – Kollision in der Boxengasse (nur LMU)</td><td>10 sec.</td></tr>
+          <tr class="section-row"><td colspan="2">§ 3 - 15 Sekundenstrafen</td></tr>
+          <tr><td>§ 3.1 – Causing a Collision (mit schwerwiegenden Folgen)</td><td>15 sec.</td></tr>
+          <tr class="section-row"><td colspan="2">§ 4 - 20 Sekundenstrafen</td></tr>
+          <tr><td>§ 4.1 – Ignorieren von gelben Flaggen</td><td>20 sec.</td></tr>
+          <tr><td>§ 4.2 – iRacing: Bremse nicht gehalten, mit Unfallfolge</td><td>-20sec/ - 100 Punkte</td></tr>
+          <tr><td>§ 4.3 – Bremse nicht gehalten, mit Unfallfolge</td><td>-20sec</td></tr>
+          <tr><td>§ 4.4 – Unsafe Rejoin mit Unfallfolge</td><td>20 sec.</td></tr>
+          <tr><td>§ 4.5 – Unsportliches Verhalten</td><td>20 sec.</td></tr>
+          <tr><td>§ 4.5 – Kollision während der Einführungsrunde (nur iRacing)</td><td>20 sec.</td></tr>
+          <tr><td>§ 4.6 – iRacing, Quali: Unter 80km/h, DT ausgelößt, Stau verursacht</td><td>20 sec.</td></tr>
+          <tr class="section-row"><td colspan="2">§ 5 - 25 Sekundenstrafen</td></tr>
+          <tr><td>§ 5.1 – Verursachen eines Massencrashs (ab 3 Fahrzeugen + eigenes Auto)</td><td>25 sec. / -10 Pkt.</td></tr>
+          <tr><td>§ 5.2 – Ignorieren von gelben Flaggen mit Unfallfolge</td><td>25 sec. / -10 Pkt.</td></tr>
+          <tr><td>§ 5.3 – Gefährliches Fahren</td><td>25 sec. / -10 Pkt.</td></tr>
+          <tr class="section-row"><td colspan="2">§ 6 - Sperren</td></tr>
+          <tr><td>§ 6.1 – Absichtliches Verursachen einer Kollision (auch Versuch ist strafbar)</td><td>Saisonsperre</td></tr>
+          <tr><td>§ 6.2 – Zweimal absichtliches Verursachen einer Kollision innerhalb SPR</td><td>Community-Ausschluss</td></tr>
+          <tr><td>§ 6.3 – iRacing: Runde 1, zwei Unfälle innerhalb einer Season</td><td>Rennsperre</td></tr>
+          <tr><td>§ 6.4 – Zwei Rennsperren innerhalb der Season</td><td>Seasonsperre</td></tr>
+          <tr class="section-row"><td colspan="2">§ 7 - Zusatz</td></tr>
+          <tr><td>§ 7.1 – Vorfälle in Runde 1 (nach Streckeninfos)</td><td>doppelte Zeitstrafe</td></tr>
+          <tr><td>§ 7.2 – iRacing: Drei Strafen innerhalb einer Veranstaltung (ohne Strafen für Boxenlinien, ingame Chat, ingame Voice)</td><td>DSQ/ - 100 Punkte</td></tr>
+          <tr><td>§ 7.3 – Drei Strafen innerhalb einer Veranstaltung (ohne Strafen für Boxenlinien, ingame Chat, ingame Voice)</td><td>DSQ</td></tr>
+          <tr><td>§ 7.4 – Unfälle nach Rennende (Donuts, Auffahren etc.)</td><td>15 sec.</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-var series = [];
-var tracks = [];
-var settings = { webhook: "", whname: "SPR Planer" };
-var notes = {};
-var currentSerieId = null;
-var currentView = "serien";
+  // ── Tabs ──
+  const tabBtns   = document.querySelectorAll(".tab-btn");
+  const tabPanels = document.querySelectorAll(".tab-panel");
 
-try { var _s = localStorage.getItem("spr_v5"); if (_s) series = JSON.parse(_s); } catch(e) {}
-try { var _t = localStorage.getItem("spr_tracks"); if (_t) tracks = JSON.parse(_t); } catch(e) {}
-try { var _c = localStorage.getItem("spr_cfg"); if (_c) settings = JSON.parse(_c); } catch(e) {}
-try { var _n = localStorage.getItem("spr_notes"); if (_n) notes = JSON.parse(_n); } catch(e) {}
-
-var DEFAULT_TASKS = [
-  "Reglement aktualisieren",
-  "Kalender erstellen",
-  "Briefing vorbereiten",
-  "Discord Ankuendigung",
-  "Server / Session einrichten",
-  "Ergebnisse eintragen",
-  "Meisterschaft aktualisieren"
-];
-
-var SL = { planned:"Geplant", prep:"Vorbereitung", active:"Aktiv", done:"Abgeschlossen" };
-var SC = { planned:"#3498db", prep:"#f39c12", active:"#2ecc71", done:"#5a6070" };
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
-function saveSeries() { try { localStorage.setItem("spr_v5", JSON.stringify(series)); } catch(e) {} }
-function saveTracks() { try { localStorage.setItem("spr_tracks", JSON.stringify(tracks)); } catch(e) {} }
-function saveCfg() { try { localStorage.setItem("spr_cfg", JSON.stringify(settings)); } catch(e) {} }
-function saveNotes() { try { localStorage.setItem("spr_notes", JSON.stringify(notes)); } catch(e) {} }
-
-function fmtDate(d) { if (!d) return "-"; var p = d.split("-"); return p[2]+"."+p[1]+"."+p[0]; }
-function dateStatus(d, done) {
-  if (done) return "done-ok";
-  if (!d) return "";
-  var today = new Date(); today.setHours(0,0,0,0);
-  var diff = Math.ceil((new Date(d) - today) / 86400000);
-  return diff < 0 ? "late" : diff <= 3 ? "soon" : "";
-}
-function getSerie(id) { for (var i=0;i<series.length;i++) if (series[i].id===id) return series[i]; return null; }
-function getTask(serie, tid) { for (var i=0;i<serie.tasks.length;i++) if (serie.tasks[i].id===tid) return serie.tasks[i]; return null; }
-function getTrack(id) { for (var i=0;i<tracks.length;i++) if (tracks[i].id===id) return tracks[i]; return null; }
-
-// ── VIEWS ──
-function showView(name) {
-  currentView = name;
-  var views = ["serien","dashboard","strecken","notizen"];
-  for (var i=0;i<views.length;i++) {
-    var el = document.getElementById("view-"+views[i]);
-    if (el) el.classList.toggle("active", views[i]===name);
+  function showTab(tabId) {
+    tabPanels.forEach(p => p.classList.remove("active"));
+    const panel = document.getElementById("panel-" + tabId);
+    if (panel) panel.classList.add("active");
   }
-  var tabs = document.querySelectorAll(".tab-btn");
-  for (var j=0;j<tabs.length;j++) tabs[j].classList.toggle("active", tabs[j].getAttribute("data-view")===name);
 
-  document.getElementById("btn-top-new").style.display = name==="serien" ? "inline-flex" : "none";
-  document.getElementById("btn-top-new-track").style.display = name==="strecken" ? "inline-flex" : "none";
-
-  if (name==="dashboard") renderDashboard();
-  if (name==="strecken") renderStrecken();
-  if (name==="notizen") renderNotizen();
-}
-
-// ── SIDEBAR ──
-function renderSidebar() {
-  var el = document.getElementById("sidebar-list");
-  if (!series.length) { el.innerHTML = "<div style=\"padding:10px;font-size:1.3rem;color:#5a6070;text-align:center\">Keine Serien</div>"; return; }
-  var html = "";
-  for (var i=0;i<series.length;i++) {
-    var s = series[i];
-    html += "<div class=\"serie-item"+(s.id===currentSerieId?" sel":"")+"\" data-id=\""+s.id+"\">";
-    html += "<div class=\"serie-dot\" style=\"background:"+s.color+"\"></div>";
-    html += "<div><div class=\"si-name\">"+s.name+"</div><div class=\"si-sub\">"+s.sim+"</div></div></div>";
-  }
-  el.innerHTML = html;
-  var items = el.querySelectorAll(".serie-item");
-  for (var j=0;j<items.length;j++) {
-    items[j].addEventListener("click", function() {
-      currentSerieId = this.getAttribute("data-id");
-      renderSidebar();
-      renderMain();
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      tabBtns.forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+      showTab(this.dataset.tab);
+      window.scrollTo({top: 0, behavior: "smooth"});
     });
-  }
-}
-
-// ── MAIN (Serien) ──
-function renderMain() {
-  var el = document.getElementById("main");
-  if (!currentSerieId) {
-    if (!series.length) {
-      el.innerHTML = "<div class=\"empty\"><div class=\"icon\">&#127937;</div><div class=\"txt\">Noch keine Serien.</div><button class=\"btn btn-primary\" id=\"btn-empty-new\">+ Erste Serie erstellen</button></div>";
-      document.getElementById("btn-empty-new").addEventListener("click", openNewSerie);
-      return;
-    }
-    var h = "<div class=\"card\"><div class=\"card-title\">Alle Serien</div>";
-    for (var i=0;i<series.length;i++) {
-      var s=series[i], c=SC[s.status]||"#5a6070", dn=0;
-      for (var t=0;t<s.tasks.length;t++) if(s.tasks[t].done) dn++;
-      var pct = s.tasks.length ? Math.round(dn/s.tasks.length*100) : 0;
-      h += "<div class=\"serie-card\" style=\"border-left-color:"+s.color+"\" data-id=\""+s.id+"\">";
-      h += "<div class=\"sc-name\">"+s.name+"</div>";
-      h += "<div class=\"sc-sub\">"+s.sim+(s.season?" - "+s.season:"")+(s.owner?" - "+s.owner:"")+"</div>";
-      h += "<div style=\"margin-top:10px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pct+"%;background:"+s.color+"\"></div></div></div>";
-      h += "<div class=\"sc-footer\"><span style=\"font-size:1.2rem;color:#6b7280\">"+dn+"/"+s.tasks.length+" erledigt</span>";
-      h += "<span class=\"badge\" style=\"background:"+c+"22;color:"+c+";border:1px solid "+c+"44\">"+(SL[s.status]||s.status)+"</span></div></div>";
-    }
-    h += "</div>";
-    el.innerHTML = h;
-    var cards = el.querySelectorAll(".serie-card");
-    for (var j=0;j<cards.length;j++) {
-      cards[j].addEventListener("click", function() { currentSerieId=this.getAttribute("data-id"); renderSidebar(); renderMain(); });
-    }
-    return;
-  }
-
-  var serie = getSerie(currentSerieId);
-  if (!serie) { currentSerieId=null; renderMain(); return; }
-
-  var dn2=0;
-  for (var ti=0;ti<serie.tasks.length;ti++) if(serie.tasks[ti].done) dn2++;
-  var pct2 = serie.tasks.length ? Math.round(dn2/serie.tasks.length*100) : 0;
-
-  var h2 = "<div class=\"card\">";
-  h2 += "<div class=\"serie-header\">";
-  h2 += "<div class=\"serie-header-bar\" style=\"background:"+serie.color+"\"></div>";
-  h2 += "<div><div class=\"serie-header-name\">"+serie.name+"</div>";
-  h2 += "<div class=\"serie-header-sub\">"+serie.sim+(serie.season?" - "+serie.season:"")+(serie.owner?" - "+serie.owner:"");
-  if (serie.start) h2 += " | "+fmtDate(serie.start)+" - "+fmtDate(serie.end);
-  h2 += "</div></div>";
-  h2 += "<div class=\"serie-header-actions\">";
-  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-back\">&#8592; Zurueck</button>";
-  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-edit-serie\">&#9998; Bearbeiten</button>";
-  h2 += "<button class=\"btn btn-secondary btn-sm\" id=\"btn-wh-settings\">&#9881; Webhook</button>";
-  h2 += "</div></div>";
-
-  h2 += "<div class=\"progress-label\">"+pct2+"% erledigt ("+dn2+"/"+serie.tasks.length+")</div>";
-  h2 += "<div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pct2+"%;background:"+serie.color+"\"></div></div>";
-  h2 += "<div class=\"card-title\">Aufgaben</div>";
-
-  for (var ti2=0;ti2<serie.tasks.length;ti2++) {
-    var task=serie.tasks[ti2];
-    var ds=dateStatus(task.date,task.done);
-    h2 += "<div class=\"task-row\">";
-    h2 += "<button class=\"task-check"+(task.done?" done":"")+"\" data-tid=\""+task.id+"\">"+( task.done?"&#10003;":"")+"</button>";
-    h2 += "<span class=\"task-text"+(task.done?" done":"")+"\">"+task.text+(task.owner?" <span style='font-size:1.2rem;color:#6b7280'>- "+task.owner+"</span>":"")+"</span>";
-    if (task.date) h2 += "<span class=\"task-date"+(ds?" "+ds:"")+"\">"+( ds==="late"?"&#9888; ":ds==="soon"?"&#8987; ":"")+fmtDate(task.date)+"</span>";
-    if (task.note) h2 += "<span style=\"font-size:1.2rem;color:#6b7280;margin-left:4px\" title=\""+task.note+"\">&#128196;</span>";
-    h2 += "<button class=\"task-btn\" data-tid=\""+task.id+"\" title=\"Bearbeiten\">&#9998;</button>";
-    h2 += "<button class=\"task-btn del\" data-tid=\""+task.id+"\" title=\"Loeschen\">&#10005;</button>";
-    h2 += "</div>";
-  }
-
-  h2 += "<div class=\"add-task-row\">";
-  h2 += "<input type=\"text\" id=\"new-task-input\" placeholder=\"+ Neue Aufgabe...\">";
-  h2 += "<button class=\"btn btn-primary btn-sm\" id=\"btn-add-task\">Hinzufuegen</button>";
-  h2 += "</div></div>";
-
-  el.innerHTML = h2;
-
-  document.getElementById("btn-back").addEventListener("click", function() { currentSerieId=null; renderSidebar(); renderMain(); });
-  document.getElementById("btn-edit-serie").addEventListener("click", function() { openEditSerie(currentSerieId); });
-  document.getElementById("btn-wh-settings").addEventListener("click", openSettings);
-  document.getElementById("btn-add-task").addEventListener("click", function() {
-    var inp = document.getElementById("new-task-input");
-    var txt = inp.value.trim();
-    if (!txt) return;
-    serie.tasks.push({ id:uid(), text:txt, done:false, date:"", owner:"", note:"", whMsg:"" });
-    saveSeries(); inp.value=""; renderMain();
-  });
-  document.getElementById("new-task-input").addEventListener("keydown", function(e) {
-    if (e.key==="Enter") document.getElementById("btn-add-task").click();
   });
 
-  // Checkboxen
-  var checks = el.querySelectorAll(".task-check");
-  for (var ci=0;ci<checks.length;ci++) {
-    checks[ci].addEventListener("click", function(e) {
-      e.stopPropagation();
-      var task = getTask(serie, this.getAttribute("data-tid"));
-      if (task) { task.done=!task.done; saveSeries(); renderMain(); }
-    });
-  }
-
-  // Edit buttons
-  var editBtns = el.querySelectorAll(".task-btn:not(.del)");
-  for (var ei=0;ei<editBtns.length;ei++) {
-    editBtns[ei].addEventListener("click", function(e) {
-      e.stopPropagation();
-      openTaskModal(currentSerieId, this.getAttribute("data-tid"));
-    });
-  }
-
-  // Delete buttons
-  var delBtns = el.querySelectorAll(".task-btn.del");
-  for (var di=0;di<delBtns.length;di++) {
-    delBtns[di].addEventListener("click", function(e) {
-      e.stopPropagation();
-      var tid = this.getAttribute("data-tid");
-      if (!confirm("Aufgabe loeschen?")) return;
-      var newT=[];
-      for (var i=0;i<serie.tasks.length;i++) if(serie.tasks[i].id!==tid) newT.push(serie.tasks[i]);
-      serie.tasks=newT; saveSeries(); renderMain();
-    });
-  }
-}
-
-// ── DASHBOARD ──
-function renderDashboard() {
-  var el = document.getElementById("dashboard-content");
-  var total=series.length, active=0, tasksDue=0, tasksSoon=0, tasksTotal=0, tasksDone=0;
-  var today = new Date(); today.setHours(0,0,0,0);
-
-  var overdueList = [];
-  for (var i=0;i<series.length;i++) {
-    var s=series[i];
-    if (s.status==="active") active++;
-    for (var t=0;t<s.tasks.length;t++) {
-      var task=s.tasks[t];
-      tasksTotal++;
-      if (task.done) { tasksDone++; continue; }
-      if (task.date) {
-        var diff = Math.ceil((new Date(task.date)-today)/86400000);
-        if (diff<0) { tasksDue++; overdueList.push({serie:s.name,color:s.color,text:task.text,date:task.date,sid:s.id}); }
-        else if (diff<=3) tasksSoon++;
-      }
+  // ── Accordion with smooth scroll to header ──
+  document.addEventListener("click", function(e) {
+    if (e.target.closest(".tab-btn")) return;
+    const h = e.target.closest(".para-header");
+    if (!h) return;
+    const item = h.parentElement;
+    const wasOpen = item.classList.contains("active");
+    item.classList.toggle("active");
+    // If opening, smooth scroll so header is visible
+    if (!wasOpen) {
+      setTimeout(() => {
+        h.scrollIntoView({behavior: "smooth", block: "nearest"});
+      }, 50);
     }
-  }
+  });
 
-  var h = "<div style=\"padding:22px\">";
-  h += "<div class=\"dash-grid\">";
-  h += "<div class=\"dash-card\"><div class=\"dash-val\">"+total+"</div><div class=\"dash-lbl\">Serien gesamt</div></div>";
-  h += "<div class=\"dash-card\"><div class=\"dash-val green\">"+active+"</div><div class=\"dash-lbl\">Aktiv</div></div>";
-  h += "<div class=\"dash-card\"><div class=\"dash-val red\">"+tasksDue+"</div><div class=\"dash-lbl\">Ueberfaellig</div></div>";
-  h += "<div class=\"dash-card\"><div class=\"dash-val yellow\">"+tasksSoon+"</div><div class=\"dash-lbl\">Bald faellig</div></div>";
-  h += "</div>";
+  // ── Strafenkatalog open by default ──
+  const defaultOpen = document.querySelector("#panel-strafen .para-item");
+  if (defaultOpen) defaultOpen.classList.add("active");
 
-  if (overdueList.length) {
-    h += "<div class=\"card\"><div class=\"card-title\">&#9888; Ueberfaellige Aufgaben</div>";
-    for (var oi=0;oi<overdueList.length;oi++) {
-      var o=overdueList[oi];
-      h += "<div class=\"task-row\" style=\"border-left:3px solid #e74c3c;cursor:pointer\" data-sid=\""+o.sid+"\">";
-      h += "<span style=\"font-size:1.2rem;font-weight:bold;color:"+o.color+";min-width:110px\">"+o.serie+"</span>";
-      h += "<span class=\"task-text\">"+o.text+"</span>";
-      h += "<span class=\"task-date late\">&#9888; "+fmtDate(o.date)+"</span>";
-      h += "</div>";
-    }
-    h += "</div>";
-  }
+  // ── Scroll to top button ──
+  const scrollBtn = document.getElementById("scrollTop");
+  window.addEventListener("scroll", () => {
+    scrollBtn.classList.toggle("visible", window.scrollY > 300);
+  });
+  scrollBtn.addEventListener("click", () => {
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
 
-  h += "<div class=\"card\"><div class=\"card-title\">Serien Uebersicht</div>";
-  if (!series.length) { h += "<div style=\"color:#5a6070;font-size:1.4rem;padding:12px 0\">Keine Serien vorhanden.</div>"; }
-  for (var si=0;si<series.length;si++) {
-    var sv=series[si], dn=0;
-    for (var tv=0;tv<sv.tasks.length;tv++) if(sv.tasks[tv].done) dn++;
-    var pv = sv.tasks.length ? Math.round(dn/sv.tasks.length*100) : 0;
-    var cv=SC[sv.status]||"#5a6070";
-    h += "<div class=\"serie-card\" style=\"border-left-color:"+sv.color+"\" data-id=\""+sv.id+"\">";
-    h += "<div style=\"display:flex;justify-content:space-between;align-items:center\">";
-    h += "<div><div class=\"sc-name\">"+sv.name+"</div><div class=\"sc-sub\">"+sv.sim+(sv.season?" - "+sv.season:"")+"</div></div>";
-    h += "<span class=\"badge\" style=\"background:"+cv+"22;color:"+cv+";border:1px solid "+cv+"44\">"+(SL[sv.status]||sv.status)+"</span></div>";
-    h += "<div style=\"margin-top:8px\"><div class=\"progress-bar\"><div class=\"progress-fill\" style=\"width:"+pv+"%;background:"+sv.color+"\"></div></div>";
-    h += "<div style=\"font-size:1.2rem;color:#6b7280;margin-top:4px\">"+dn+"/"+sv.tasks.length+" Aufgaben erledigt</div></div></div>";
-  }
-  h += "</div></div>";
-  el.innerHTML = h;
+  // ── Keyword highlighting ──
+  const redWords    = ["verboten", "Verboten", "untersagt", "Untersagt", "DSQ", "Disqualifikation", "Ausschluss", "strengstens"];
+  const orangeWords = ["Saisonsperre", "Strafe", "Sanktion", "Punktabzug", "bestraft"];
+  const greenWords  = ["erlaubt", "Erlaubt", "straffrei", "zulässig"];
 
-  var rows = el.querySelectorAll(".task-row[data-sid]");
-  for (var ri=0;ri<rows.length;ri++) {
-    rows[ri].addEventListener("click", function() {
-      currentSerieId=this.getAttribute("data-sid");
-      showView("serien"); renderSidebar(); renderMain();
+  function highlightKeywords(el) {
+    // Only process text nodes inside para-content
+    const contents = el.querySelectorAll(".para-content p, .para-content td");
+    contents.forEach(node => {
+      let html = node.innerHTML;
+      redWords.forEach(w => {
+        html = html.replace(new RegExp("\\b" + w + "\\b", "g"), '<span class="kw-red">' + w + '</span>');
+      });
+      orangeWords.forEach(w => {
+        html = html.replace(new RegExp("\\b" + w + "\\b", "g"), '<span class="kw-orange">' + w + '</span>');
+      });
+      greenWords.forEach(w => {
+        html = html.replace(new RegExp("\\b" + w + "\\b", "g"), '<span class="kw-green">' + w + '</span>');
+      });
+      node.innerHTML = html;
     });
   }
-  var dcards = el.querySelectorAll(".serie-card");
-  for (var dci=0;dci<dcards.length;dci++) {
-    dcards[dci].addEventListener("click", function() {
-      currentSerieId=this.getAttribute("data-id");
-      showView("serien"); renderSidebar(); renderMain();
-    });
-  }
-}
 
-// ── STRECKEN ──
-function renderStrecken() {
-  var el = document.getElementById("strecken-content");
-  var h = "<div style=\"padding:22px\">";
-  if (!tracks.length) {
-    h += "<div class=\"empty\"><div class=\"icon\">&#127959;</div><div class=\"txt\">Noch keine Strecken.</div><button class=\"btn btn-primary\" id=\"btn-empty-track\">+ Erste Strecke</button></div>";
-    el.innerHTML = h + "</div>";
-    document.getElementById("btn-empty-track").addEventListener("click", openNewTrack);
-    return;
-  }
-  h += "<div class=\"track-grid\">";
-  for (var i=0;i<tracks.length;i++) {
-    var tr=tracks[i];
-    h += "<div class=\"track-card\" data-id=\""+tr.id+"\">";
-    h += "<div class=\"track-name\">"+tr.name+"</div>";
-    if (tr.country) h += "<div style=\"font-size:1.3rem;color:#6b7280\">&#127988; "+tr.country+"</div>";
-    h += "<div style=\"font-size:1.3rem;color:#9ca3af;margin-top:6px\">";
-    if (tr.len) h += "&#128204; "+tr.len+" km &nbsp;";
-    if (tr.laptime) h += "&#9201; "+tr.laptime+" &nbsp;";
-    if (tr.cars) h += "&#128663; max "+tr.cars;
-    h += "</div>";
-    h += "<div class=\"track-tags\">";
-    if (tr.sprint) h += "<span class=\"tag sprint\">Sprint</span>";
-    if (tr.endurance) h += "<span class=\"tag endurance\">Endurance</span>";
-    if (tr.multiclass) h += "<span class=\"tag multiclass\">Multiclass</span>";
-    if (tr.night) h += "<span class=\"tag\">&#127762; Nacht</span>";
-    if (tr.wet) h += "<span class=\"tag\">&#127783; Regen</span>";
-    h += "</div></div>";
-  }
-  h += "</div></div>";
-  el.innerHTML = h;
-  var cards = el.querySelectorAll(".track-card");
-  for (var j=0;j<cards.length;j++) {
-    cards[j].addEventListener("click", function() { openEditTrack(this.getAttribute("data-id")); });
-  }
-}
-
-// ── TASK MODAL ──
-function openTaskModal(sid, tid) {
-  var serie=getSerie(sid), task=getTask(serie,tid);
-  if (!task) return;
-  document.getElementById("t-sid").value=sid;
-  document.getElementById("t-tid").value=tid;
-  document.getElementById("t-text").value=task.text;
-  document.getElementById("t-date").value=task.date||"";
-  document.getElementById("t-owner").value=task.owner||"";
-  document.getElementById("t-note").value=task.note||"";
-  document.getElementById("t-wh-msg").value=task.whMsg||"";
-  var whEl=document.getElementById("wh-status"), btn=document.getElementById("btn-send-now");
-  if (settings.webhook) { whEl.textContent="Webhook: "+(settings.whname||"SPR Planer"); whEl.style.color="#2ecc71"; btn.style.display="inline-flex"; }
-  else { whEl.textContent="Kein Webhook konfiguriert"; whEl.style.color="#6b7280"; btn.style.display="none"; }
-  document.getElementById("modal-task").classList.add("open");
-}
-
-// ── SERIE MODALS ──
-function setColor(c) {
-  var opts=document.querySelectorAll(".col-opt");
-  for (var i=0;i<opts.length;i++) opts[i].classList.toggle("sel", opts[i].getAttribute("data-color")===c);
-}
-function getColor() { var el=document.querySelector(".col-opt.sel"); return el?el.getAttribute("data-color"):"#f0a500"; }
-
-function openNewSerie() {
-  document.getElementById("modal-serie-title").textContent="Neue Serie";
-  document.getElementById("f-id").value="";
-  document.getElementById("f-name").value="";
-  document.getElementById("f-sim").value="iRacing";
-  document.getElementById("f-season").value="";
-  document.getElementById("f-status").value="planned";
-  document.getElementById("f-start").value="";
-  document.getElementById("f-end").value="";
-  document.getElementById("f-owner").value="";
-  document.getElementById("btn-del-serie").style.display="none";
-  setColor("#f0a500");
-  document.getElementById("modal-serie").classList.add("open");
-}
-function openEditSerie(id) {
-  var s=getSerie(id); if(!s) return;
-  document.getElementById("modal-serie-title").textContent="Serie bearbeiten";
-  document.getElementById("f-id").value=s.id;
-  document.getElementById("f-name").value=s.name;
-  document.getElementById("f-sim").value=s.sim;
-  document.getElementById("f-season").value=s.season||"";
-  document.getElementById("f-status").value=s.status;
-  document.getElementById("f-start").value=s.start||"";
-  document.getElementById("f-end").value=s.end||"";
-  document.getElementById("f-owner").value=s.owner||"";
-  document.getElementById("btn-del-serie").style.display="inline-flex";
-  setColor(s.color);
-  document.getElementById("modal-serie").classList.add("open");
-}
-
-function openNewTrack() {
-  document.getElementById("modal-track-title").textContent="Neue Strecke";
-  document.getElementById("tr-id").value="";
-  document.getElementById("tr-name").value="";
-  document.getElementById("tr-country").value="";
-  document.getElementById("tr-len").value="";
-  document.getElementById("tr-laptime").value="";
-  document.getElementById("tr-cars").value="";
-  document.getElementById("tr-sprint").checked=false;
-  document.getElementById("tr-endurance").checked=false;
-  document.getElementById("tr-multiclass").checked=false;
-  document.getElementById("tr-night").checked=false;
-  document.getElementById("tr-wet").checked=false;
-  document.getElementById("tr-note").value="";
-  document.getElementById("btn-del-track").style.display="none";
-  document.getElementById("modal-track").classList.add("open");
-}
-function openEditTrack(id) {
-  var tr=getTrack(id); if(!tr) return;
-  document.getElementById("modal-track-title").textContent="Strecke bearbeiten";
-  document.getElementById("tr-id").value=tr.id;
-  document.getElementById("tr-name").value=tr.name;
-  document.getElementById("tr-country").value=tr.country||"";
-  document.getElementById("tr-len").value=tr.len||"";
-  document.getElementById("tr-laptime").value=tr.laptime||"";
-  document.getElementById("tr-cars").value=tr.cars||"";
-  document.getElementById("tr-sprint").checked=!!tr.sprint;
-  document.getElementById("tr-endurance").checked=!!tr.endurance;
-  document.getElementById("tr-multiclass").checked=!!tr.multiclass;
-  document.getElementById("tr-night").checked=!!tr.night;
-  document.getElementById("tr-wet").checked=!!tr.wet;
-  document.getElementById("tr-note").value=tr.note||"";
-  document.getElementById("btn-del-track").style.display="inline-flex";
-  document.getElementById("modal-track").classList.add("open");
-}
-
-function openSettings() {
-  document.getElementById("s-webhook").value=settings.webhook||"";
-  document.getElementById("s-wh-name").value=settings.whname||"SPR Planer";
-  document.getElementById("modal-settings").classList.add("open");
-}
-
-// ── NOTIZEN ──
-function renderNotizen() {
-  document.getElementById("note-global").value=notes["global"]||"";
-  var serieCard=document.getElementById("note-serie-card");
-  if (currentSerieId) {
-    var s=getSerie(currentSerieId);
-    if (s) {
-      document.getElementById("note-serie-label").textContent="Notizen: "+s.name;
-      document.getElementById("note-serie-area").value=notes["serie_"+currentSerieId]||"";
-      serieCard.style.display="block";
-    }
-  } else { serieCard.style.display="none"; }
-}
-
-var _nt1=null, _nt2=null;
-document.getElementById("note-global").addEventListener("input", function() {
-  notes["global"]=this.value; clearTimeout(_nt1);
-  _nt1=setTimeout(function(){ saveNotes(); var el=document.getElementById("note-global-saved"); el.classList.add("show"); setTimeout(function(){el.classList.remove("show");},1500); },800);
-});
-document.getElementById("note-serie-area").addEventListener("input", function() {
-  if (!currentSerieId) return;
-  notes["serie_"+currentSerieId]=this.value; clearTimeout(_nt2);
-  _nt2=setTimeout(function(){ saveNotes(); var el=document.getElementById("note-serie-saved"); el.classList.add("show"); setTimeout(function(){el.classList.remove("show");},1500); },800);
-});
-
-// ── WEBHOOK ──
-function sendWebhook(msg, color) {
-  if (!settings.webhook) return;
-  var c = color ? parseInt(color.replace("#",""),16) : 15763456;
-  fetch(settings.webhook, {
-    method:"POST", headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ username:settings.whname||"SPR Planer", embeds:[{ title:"SPR Planer Erinnerung", description:msg, color:c, footer:{text:"SPR Planer"} }] })
-  }).then(function(r){ alert(r.ok?"Gesendet!":"Fehler beim Senden!"); }).catch(function(){ alert("Fehler!"); });
-}
-
-// ── EVENTS ──
-// Tabs
-var tabBtns = document.querySelectorAll(".tab-btn");
-for (var ti=0;ti<tabBtns.length;ti++) {
-  tabBtns[ti].addEventListener("click", function() { showView(this.getAttribute("data-view")); });
-}
-
-document.getElementById("btn-top-new").addEventListener("click", openNewSerie);
-document.getElementById("btn-top-new-track").addEventListener("click", openNewTrack);
-document.getElementById("btn-sb-new").addEventListener("click", openNewSerie);
-
-// Serie speichern
-document.getElementById("btn-save-serie").addEventListener("click", function() {
-  var name=document.getElementById("f-name").value.trim();
-  if (!name) { alert("Name fehlt!"); return; }
-  var id=document.getElementById("f-id").value;
-  var data={ name:name, sim:document.getElementById("f-sim").value, season:document.getElementById("f-season").value,
-    status:document.getElementById("f-status").value, start:document.getElementById("f-start").value,
-    end:document.getElementById("f-end").value, owner:document.getElementById("f-owner").value, color:getColor() };
-  if (id) {
-    for (var i=0;i<series.length;i++) if(series[i].id===id){data.id=id;data.tasks=series[i].tasks;series[i]=data;break;}
-  } else {
-    data.id=uid(); data.tasks=[];
-    for (var di=0;di<DEFAULT_TASKS.length;di++) data.tasks.push({id:uid(),text:DEFAULT_TASKS[di],done:false,date:"",owner:"",note:"",whMsg:""});
-    currentSerieId=data.id; series.push(data);
-  }
-  saveSeries(); document.getElementById("modal-serie").classList.remove("open"); renderSidebar(); renderMain();
-});
-document.getElementById("btn-cancel-serie").addEventListener("click", function() { document.getElementById("modal-serie").classList.remove("open"); });
-document.getElementById("btn-del-serie").addEventListener("click", function() {
-  var id=document.getElementById("f-id").value;
-  if (!id||!confirm("Serie loeschen?")) return;
-  var nl=[];for(var i=0;i<series.length;i++)if(series[i].id!==id)nl.push(series[i]);
-  series=nl; if(currentSerieId===id)currentSerieId=null;
-  saveSeries(); document.getElementById("modal-serie").classList.remove("open"); renderSidebar(); renderMain();
-});
-
-// Aufgabe speichern
-document.getElementById("btn-save-task").addEventListener("click", function() {
-  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
-  var serie=getSerie(sid), task=getTask(serie,tid); if(!task) return;
-  var txt=document.getElementById("t-text").value.trim(); if(!txt){alert("Text fehlt!");return;}
-  task.text=txt; task.date=document.getElementById("t-date").value;
-  task.owner=document.getElementById("t-owner").value;
-  task.note=document.getElementById("t-note").value;
-  task.whMsg=document.getElementById("t-wh-msg").value;
-  saveSeries(); document.getElementById("modal-task").classList.remove("open"); renderMain();
-});
-document.getElementById("btn-cancel-task").addEventListener("click", function() { document.getElementById("modal-task").classList.remove("open"); });
-document.getElementById("btn-del-task").addEventListener("click", function() {
-  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
-  if (!confirm("Aufgabe loeschen?")) return;
-  var serie=getSerie(sid), nl=[];
-  for(var i=0;i<serie.tasks.length;i++)if(serie.tasks[i].id!==tid)nl.push(serie.tasks[i]);
-  serie.tasks=nl; saveSeries(); document.getElementById("modal-task").classList.remove("open"); renderMain();
-});
-document.getElementById("btn-send-now").addEventListener("click", function() {
-  var sid=document.getElementById("t-sid").value, tid=document.getElementById("t-tid").value;
-  var serie=getSerie(sid), task=getTask(serie,tid);
-  var msg=document.getElementById("t-wh-msg").value.trim();
-  if (!msg) { msg="Erinnerung: **"+task.text+"**"; if(task.date)msg+="\nFaellig: "+fmtDate(task.date); if(serie)msg+="\nSerie: "+serie.name; }
-  sendWebhook(msg, serie?serie.color:null);
-});
-
-// Strecke speichern
-document.getElementById("btn-save-track").addEventListener("click", function() {
-  var name=document.getElementById("tr-name").value.trim(); if(!name){alert("Name fehlt!");return;}
-  var id=document.getElementById("tr-id").value;
-  var data={ name:name, country:document.getElementById("tr-country").value,
-    len:document.getElementById("tr-len").value, laptime:document.getElementById("tr-laptime").value,
-    cars:document.getElementById("tr-cars").value, sprint:document.getElementById("tr-sprint").checked,
-    endurance:document.getElementById("tr-endurance").checked, multiclass:document.getElementById("tr-multiclass").checked,
-    night:document.getElementById("tr-night").checked, wet:document.getElementById("tr-wet").checked,
-    note:document.getElementById("tr-note").value };
-  if (id) { for(var i=0;i<tracks.length;i++)if(tracks[i].id===id){data.id=id;tracks[i]=data;break;} }
-  else { data.id=uid(); tracks.push(data); }
-  saveTracks(); document.getElementById("modal-track").classList.remove("open"); renderStrecken();
-});
-document.getElementById("btn-cancel-track").addEventListener("click", function() { document.getElementById("modal-track").classList.remove("open"); });
-document.getElementById("btn-del-track").addEventListener("click", function() {
-  var id=document.getElementById("tr-id").value; if(!id||!confirm("Strecke loeschen?")) return;
-  var nl=[];for(var i=0;i<tracks.length;i++)if(tracks[i].id!==id)nl.push(tracks[i]);
-  tracks=nl; saveTracks(); document.getElementById("modal-track").classList.remove("open"); renderStrecken();
-});
-
-// Settings
-document.getElementById("btn-save-settings").addEventListener("click", function() {
-  settings.webhook=document.getElementById("s-webhook").value.trim();
-  settings.whname=document.getElementById("s-wh-name").value.trim()||"SPR Planer";
-  saveCfg(); document.getElementById("modal-settings").classList.remove("open"); renderMain();
-});
-document.getElementById("btn-cancel-settings").addEventListener("click", function() { document.getElementById("modal-settings").classList.remove("open"); });
-
-// Color picker
-document.getElementById("color-picker").addEventListener("click", function(e) {
-  var opt=e.target.closest(".col-opt"); if(opt) setColor(opt.getAttribute("data-color"));
-});
-
-// Modal hintergrund schliessen
-var modals=["modal-serie","modal-task","modal-track","modal-settings"];
-for (var mi=0;mi<modals.length;mi++) {
-  (function(id){ document.getElementById(id).addEventListener("click", function(e){ if(e.target===this) this.classList.remove("open"); }); })(modals[mi]);
-}
-
-document.addEventListener("keydown", function(e) {
-  if (e.key==="Escape") { for(var i=0;i<modals.length;i++) document.getElementById(modals[i]).classList.remove("open"); }
-});
-
-// ── INIT ──
-showView("serien");
-renderSidebar();
-renderMain();
+  highlightKeywords(document);
 </script>
+
+
+
+<button id="scrollTop" title="Nach oben">&#8679;</button>
 </body>
 </html>
